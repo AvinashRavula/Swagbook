@@ -1,0 +1,34 @@
+.white_card {
+    margin:10px;
+    background-color: white;
+    border-radius: 5px;
+    border-color: black;
+    padding: 15px;
+}
+
+.normal_heading {
+    font-size: 15px;
+    font-family: inherit;
+    color:#61677d;
+}
+
+.small_circle {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%; /*the magic*/
+}
+
+.extra-small-circle {
+    width: 29px;
+    height: 29px;
+    border-radius: 50%; /*the magic*/
+}
+
+.background {
+    background-color: #e9ebee;
+}
+
+.a-container {
+    width:85%;
+    margin: 0 auto;
+}

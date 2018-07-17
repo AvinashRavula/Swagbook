@@ -1,0 +1,67 @@
+.Header {
+    /* background-color: #3B5997; */
+    background-color: black;
+    /* background-image: linear-gradient(#4e69a2, #3b5998 50%); */
+    border-bottom: 1px solid #133783;
+    min-height: 42px;
+    position: relative;
+    z-index: 1;
+    height: 82px;
+}
+
+.header-name{
+    color: white;
+    font-family: fantasy;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.text {
+    font-family: inherit ;
+    margin-bottom: 5px;
+    margin-top: 20px;
+    color: white;
+}
+
+table, th, td {
+    border-right: 10px solid black;
+    margin:0 auto;
+}
+
+table{
+    margin-top:10px;
+}
+
+a {
+    color:#f8f9fb;
+    font-size:10;
+}
+
+a:hover {
+    color:#f8f9fb;
+
+}
+
+.large-font {
+    font-family: inherit;
+    font-size: 35px ;
+}
+
+.black {
+    color: black;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.normal-heading {
+    font-size: 20px;
+}
+
+.label-normal {
+    font-size: 13px;
+    color: white;
+    margin: 0px;
+}

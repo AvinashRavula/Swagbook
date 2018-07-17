@@ -1,0 +1,23 @@
+.a-profile {
+    margin-left: 100px;
+    margin-top: -50px;
+}
+
+.a-profile-name {
+    margin-left: 20px;
+    font-weight: 600;
+    font-family: inherit;
+}
+
+.a-mt-40 {
+    margin-top:40px;
+}
+
+.a-mt--40 {
+    margin-top:-40px;
+}
+
+.btn-profile-edit {
+    margin-top: -40px;
+    margin-left: 168px
+}
