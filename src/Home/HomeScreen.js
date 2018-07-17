@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, Link, Redirect } from "react-router-dom";
 import { Grid, Row, Col } from "react-bootstrap";
 import { NewPost, AllPosts } from "./Posts";
 import { PeopleYouMayKnow } from "./People";
@@ -13,7 +13,7 @@ import '../styles/Home.css';
 import '../styles/common.css';
 
 const cookies = new Cookies();
-const DOMAIN = "http://127.0.0.1:8000/"
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const MY_PROFILE = BASE_URL + "my_profile/"
 
@@ -144,6 +144,14 @@ class Home extends Component {
                 <HomeBody {...this.props}/>
             </div>
         );
+    }
+
+    componentDidMount = () => {
+        let auth = cookies.get('user_token');
+        if(auth === null)
+        {
+            <Redirect to="/login"/>
+        }
     }
 }
 
