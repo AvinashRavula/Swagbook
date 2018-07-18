@@ -5,14 +5,16 @@ import InfiniteScroll from 'react-infinite-scroller';
 import '../styles/posts.css'
 import '../styles/common.css'
 
-const HOSTNAME = "http://127.0.0.1:8000/facebook/"
+const HOSTNAME = "https://swagbook-django.herokuapp.com/facebook/"
 const POSTS_URL = HOSTNAME + "posts/"
 const FILE_URL = HOSTNAME + "files/"
-const MEDIA_URL = "http://127.0.0.1:8000/media/"
-const DOMAIN = "http://127.0.0.1:8000/"
+
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const ATTACHMENTS_URL = BASE_URL + 'files/'
-const UPLOAD_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/upload.php"
+const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
+const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+const UPLOAD_URL = MEDIA_URL +  "upload.php";
 const cookies = new Cookies();
 
 export class NewPost extends Component {
@@ -31,26 +33,31 @@ export class NewPost extends Component {
         this.inputOpenFileRef.current.click();
     }
 
-    _uploadAttachment = (id, file) => {
+    _uploadAttachment = (file) => {
         let auth = cookies.get('user_token');
-        let formData = new FormData();
-        formData.append('file',file);
-        formData.append('type',file.type);
-        formData.append('post', id);
-        fetch(ATTACHMENTS_URL ,{
-            method:'post',
-            headers:{
-                Authorization:auth
-            },
-            body:formData
-        }).then((response) => {return response.json()})
-        .then((resp_json) => {
-            if('id' in resp_json){
-                let attachments = this.state.attachments;
-                attachments = attachments.concat(resp_json);
-                this.setState({attachments:attachments});
-            }
-        }).catch(e=>console.log("Error uploading attachment",e));
+        if(auth !== null){
+            let formBody = new FormData();
+            formBody.append('fileToUpload', file);
+            fetch(proxyUrl +  UPLOAD_URL,{
+                method:'post',
+                body:formBody
+            }).then((response)=>{return response.json()})
+            .then((resp_json) => {
+                console.log(resp_json);
+                if(!resp_json.error){
+                    let temp = this.state.files;
+                    let newFile = {
+                        uri: resp_json.file,
+                        type:file.type
+                    }
+                    temp.push(newFile);
+                    this.setState({files:temp});
+                }
+            }).catch(e => {
+                console.log("error in uploading attachment",e);
+                alert('Technical Error: Please refresh the page and try again');
+            });
+        }
     }
 
     _onChangeFile = (event) => {
@@ -58,33 +65,7 @@ export class NewPost extends Component {
         event.preventDefault();
         var file = event.target.files[0];
         console.log(file);
-        let formBody = new FormData();
-        formBody.append('fileToUpload', file);
-        fetch(UPLOAD_URL,{
-            method:'post',
-            body:formBody
-        }).then((response)=>{return response.json()})
-        .then((resp_json) => {
-            console.log(resp_json);
-        }).catch(e => {console.log("error in uploading attachment",e)});
-        // let fileType = file.type;
-        // let fileName = file.name;
-        // let reader = new FileReader();
-        // let tempFiles = this.state.files;
-        // reader.onload = (e) => {
-        //     let newFile = {
-        //         uri: e.target.result,
-        //         type: fileType,
-        //         name:fileName,
-        //         obj:file
-        //     }
-        //     tempFiles.push(newFile);
-        //     this.setState(prevState=> ({
-        //         files:tempFiles
-        //     }));
-        //     // this.setState({: e.target.result});
-        // };
-        // reader.readAsDataURL(event.target.files[0]);
+        this._uploadAttachment(file);
     }
 
     _saveCaption = (event) => {
@@ -112,7 +93,7 @@ export class NewPost extends Component {
                 this.state.files.map((file) =>{
                     console.log("file is ", file);
                     let fileBody = new FormData();
-                    fileBody.append('file', file.obj)
+                    fileBody.append('file', file.uri);
                     fileBody.append('type', file.type);
                     fileBody.append('post', myJson.id);
                     fetch( FILE_URL , {
@@ -151,8 +132,8 @@ export class NewPost extends Component {
                                 placeholder="Write something here...">
                             </textarea>
                             {
-                                files && files.map(file => {
-                                    return <img src={file.uri} width="56px" height="56px" style={{margin:'5px'}} key={file.size}/>
+                                files && files.map((file, index) => {
+                                    return <img src={MEDIA_URL + file.uri} width="56px" height="56px" style={{margin:'5px'}} key={index}/>
                                 })  
                             }
                         </div>
@@ -227,11 +208,11 @@ class Attachment extends Component {
                 
                 {
                 attachment.type.includes('image') ?
-                    <img src={attachment.file} width={'100%'}height={'100%'}/>
+                    <img src={ MEDIA_URL + attachment.file} width={'100%'}height={'100%'}/>
                     :
                     // <p>Video</p>
                     <video width="400" controls width={'100%'}height={'100%'}>
-                        <source src={attachment.file} type={attachment.type}/>
+                        <source src={MEDIA_URL + attachment.file} type={attachment.type}/>
                         Your browser does not support HTML5 video.
                     </video>
                 }
@@ -561,28 +542,29 @@ class Post extends Component{
 export class AllPosts extends Component {
 
     state = {
-        posts: [],
+        posts: []
     }
 
     _fetchPosts = (url) => {
-        console.log("token is ",cookies.get('user_token'));
-        fetch(url,{
-            method:'get',
-            headers:{
-                Authorization: cookies.get('user_token')
-            }
-        }).then(function(response) {return response.json()})
-        .then((resp_json) =>{
-            console.log(resp_json);
-            let tempPosts = this.state.posts;
-            tempPosts = tempPosts.concat(resp_json.results);
-            this.setState({
-                posts: tempPosts,
-                next:resp_json.next,
-                previous: resp_json.previous,
-            })
-        }).catch(e => console.log("Error at fetching posts", e));
-
+        let auth = cookies.get('user_token');
+        if(url !== null){
+            fetch(url,{
+                method:'get',
+                headers:{
+                    Authorization: auth
+                }
+            }).then(function(response) {return response.json()})
+            .then((resp_json) =>{
+                console.log(resp_json);
+                let tempPosts = this.state.posts;
+                tempPosts = tempPosts.concat(resp_json.results);
+                this.setState({
+                    posts: tempPosts,
+                    next:resp_json.next,
+                    previous: resp_json.previous,
+                })
+            }).catch(e => console.log("Error at fetching posts", e));
+        }
     }
 
     _refreshPosts = () => {

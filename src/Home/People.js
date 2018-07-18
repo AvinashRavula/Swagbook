@@ -3,8 +3,9 @@ import '../styles/common.css';
 import {Grid, Row, Col} from 'react-bootstrap';
 import Cookies from 'universal-cookie';
 
-const HOSTNAME = "http://127.0.0.1:8000/facebook/"
+const HOSTNAME = "https://swagbook-django.herokuapp.com/facebook/"
 const people_you_may_know_url = HOSTNAME + "peopleyoumayknow/"
+const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
 const cookies = new Cookies();
 
 class User extends Component {
@@ -69,8 +70,9 @@ class User extends Component {
                 <Grid>
                     <Row>
                         <Col md={3}>
+                        <i class="fa fa-user" aria-hidden="true"></i>
                         { profilepicture ?
-                            <img src={profilepicture} className="small_circle" />
+                            <img src={ MEDIA_URL + profilepicture} className="small_circle" />
                             : <img src={require("../assets/connect_people.png")} className="small_circle" />
                         }
                         </Col>

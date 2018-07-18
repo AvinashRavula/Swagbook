@@ -13,9 +13,10 @@ import '../styles/Home.css';
 import '../styles/common.css';
 
 const cookies = new Cookies();
-const DOMAIN = "http://127.0.0.1:8000/"
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const MY_PROFILE = BASE_URL + "my_profile/"
+const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
 
 export class HomeHeader extends Component {
 
@@ -61,16 +62,15 @@ export class HomeHeader extends Component {
 class HomeLeft extends Component {
 
     render(){
-        let {user} = this.props;
-        
+        let {first_name, last_name, profile} = this.props.user;
         return(
             <div>
                 {
-                    user.profilepicture ? 
-                        <img src={user.profilepicture.image} className="extra-small-circle"/>
+                    profile && profile.profilepicture ? 
+                        <img src={ MEDIA_URL + profile.profilepicture.image} className="extra-small-circle"/>
                         : <img src={require('../assets/profile.jpg')} className="extra-small-circle"/>
                 }
-                {user.first_name + " " + user.last_name}<br/>
+                {first_name + " " + last_name}<br/>
                 <button className="btn btn-link">News feed</button><br/>
                 <button className="btn btn-link">Messages</button><br/>
             </div>

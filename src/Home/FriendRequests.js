@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import { Grid, Row, Col } from "react-bootstrap";
 import Cookies from 'universal-cookie';
 
-const DOMAIN = "http://127.0.0.1:8000/"
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const friend_requests_url = BASE_URL + 'friends/requests/'
 const users_v2_url = BASE_URL + "v2/users/"
+const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
 
 const cookies = new Cookies();
 class UserRequest extends Component {
@@ -60,14 +61,14 @@ class UserRequest extends Component {
 
 
     render(){
-        let {first_name, last_name, } = this.props.user;
+        let {first_name, last_name, profilepicture } = this.props.user;
         let {display, accepted} = this.state;
         return(
             <div style={{display:display}}>
                 <Grid>
                     <Row>
                         <Col md={3}>
-                        <img src={require("../assets/connect_people.png")} className="small_circle" />
+                        <img src={ profilepicture ? MEDIA_URL + profilepicture : require("../assets/connect_people.png")} className="small_circle" />
                         </Col>
                         <Col md={9}>
                             <div>

@@ -7,9 +7,13 @@ import { Friends } from "./Friends";
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const DOMAIN = "http://127.0.0.1:8000/"
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const MY_PROFILE = BASE_URL + "my_profile/"
+
+const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
+const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+const UPLOAD_URL = MEDIA_URL +  "upload.php";
 
 export class Profile extends Component {
 
@@ -55,21 +59,36 @@ export class Profile extends Component {
         }
         if(url == '')
             return;
-        let formData = new FormData();
-        formData.append('image',file);
-        formData.append('profile', profile_id);
-        fetch(url ,{
-            method:method,
-            headers:{
-                Authorization:auth
-            },
-            body:formData
-        }).then((response) => {return response.json()})
+        let formBody = new FormData();
+        formBody.append('fileToUpload', file);
+        fetch(proxyUrl +  UPLOAD_URL,{
+            method:'post',
+            body:formBody
+        }).then((response)=>{return response.json()})
         .then((resp_json) => {
-            let temp_user = this.state.user;
-            temp_user.profile[upload_as + 'picture'] = resp_json;
-            this.setState({user:temp_user});
-        }).catch(e=>console.log("Error uploading attachment",e));
+            console.log(resp_json);
+            if(!resp_json.error){
+                let formData = new FormData();
+                formData.append('image',resp_json.file);
+                formData.append('profile', profile_id);
+                fetch(url ,{
+                    method:method,
+                    headers:{
+                        Authorization:auth
+                    },
+                    body:formData
+                }).then((response) => {return response.json()})
+                .then((resp_json) => {
+                    let temp_user = this.state.user;
+                    temp_user.profile[upload_as + 'picture'] = resp_json;
+                    this.setState({user:temp_user});
+                }).catch(e=>console.log("Error uploading attachment",e));
+            }
+        }).catch(e => {
+            console.log("error in uploading attachment",e);
+            alert('Technical Error: Please refresh the page and try again');
+        });
+       
     }
     
     _onChangeFile = (event, file_of) => {
@@ -111,13 +130,13 @@ export class Profile extends Component {
                     {user && <div className="a-container">
                         <input type="file" id="file" ref={this.inputOpenFileCoverRef} style={{display:'none'}}
                                         onChange={(event) => this._onChangeFile(event, 'cover')}/>
-                        <img src={user.profile.coverpicture ? user.profile.coverpicture.image : require("../assets/cover.jpg")} width="100%" height="300px"/>
+                        <img src={user.profile.coverpicture ? MEDIA_URL + user.profile.coverpicture.image : require("../assets/cover.jpg")} width="100%" height="300px"/>
                         <button className="btn btn-link a-mt--40" onClick={this._openCoverFileDialog}>edit</button>
                         <div className="row">
                             <div style={{width:'50%'}}>
                                 <input type="file" id="file" ref={this.inputOpenFileProfileRef} style={{display:'none'}}
                                             onChange={(event) => this._onChangeFile(event,'profile')}/>
-                                <img src={user.profile.profilepicture ? user.profile.profilepicture.image : require("../assets/profile.jpg")} width="128px" height="128px" 
+                                <img src={user.profile.profilepicture ? MEDIA_URL + user.profile.profilepicture.image : require("../assets/profile.jpg")} width="128px" height="128px" 
                                     className="a-profile"/>
                                 <label className="a-profile-name a-mt-40">
                                     {user.first_name + " " + user.last_name}

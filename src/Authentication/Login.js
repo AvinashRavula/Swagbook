@@ -5,9 +5,10 @@ import { withRouter } from "react-router-dom";
 import Cookies from 'universal-cookie';
 import { Signup } from "./Signup";
 
-const HOSTNAME = 'http://127.0.0.1:8000/facebook/'
+const HOSTNAME = 'https://swagbook-django.herokuapp.com/facebook/'
 const basic_url = HOSTNAME + 'api-basictoken-auth/';
 const auth_key = "Basic c2lnbnVwOmxvZ2luQDEyMjk="
+var proxyUrl = 'https://cors-anywhere.herokuapp.com/'
 const cookies = new Cookies();
 
 class LoginHeader extends Component{
@@ -265,7 +266,7 @@ class LoginSignup extends Component {
         }
 
         return(
-            <Signup />
+            <Signup {...this.props}/>
             // <div style={{height:'550px'}}>
             //     <Grid>
             //         <Row style={{height:'100%'}}>
