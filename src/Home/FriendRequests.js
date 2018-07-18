@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Grid, Row, Col } from "react-bootstrap";
 import Cookies from 'universal-cookie';
 
-const DOMAIN = "https://swagbook-django.herokuapp.com/"
+const DOMAIN = "http://127.0.0.1:8000/"
 const BASE_URL = DOMAIN + "facebook/"
 const friend_requests_url = BASE_URL + 'friends/requests/'
 const users_v2_url = BASE_URL + "v2/users/"

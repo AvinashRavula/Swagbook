@@ -7,7 +7,7 @@ import { Friends } from "./Friends";
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const DOMAIN = "https://swagbook-django.herokuapp.com/"
+const DOMAIN = "http://127.0.0.1:8000/"
 const BASE_URL = DOMAIN + "facebook/"
 const MY_PROFILE = BASE_URL + "my_profile/"
 

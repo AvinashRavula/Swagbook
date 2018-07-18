@@ -6,10 +6,10 @@
     padding: 15px;
 }
 
-.normal_heading {
-    font-size: 15px;
+.normal-heading {
+    font-size: 20px;
     font-family: inherit;
-    color:#61677d;
+    color:black;
 }
 
 .small_circle {
@@ -26,9 +26,60 @@
 
 .background {
     background-color: #e9ebee;
+    background-image: url("../assets/background.jpg");
 }
 
 .a-container {
     width:85%;
     margin: 0 auto;
+}
+
+body {
+    background-image: url("../assets/background.jpg");
+}
+
+::-webkit-scrollbar{
+    display:none ;
+}
+
+.avi-white-container{
+    background: rgba(255, 255, 254, 0.5);
+    max-height: 550px;
+    max-width: 450px;
+    border-radius: 10px;
+    padding: 10px;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+.avi-black-container{
+    background: rgba(0, 0, 0, 0.5);
+    max-height: 550px;
+    max-width: 500px;
+    border-radius: 10px;
+    padding: 10px;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+.avi-input{
+    border: none;
+    border-bottom: 2px solid white;
+    background: transparent;
+    color:white;
+    width: 100%;
+    outline: none;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: rgba(255, 255, 255, 0.705);
+}
+::-moz-placeholder { /* Firefox 19+ */
+    color: rgba(255, 255, 255, 0.705);
+}
+:-ms-input-placeholder { /* IE 10+ */
+    color: rgba(255, 255, 255, 0.705);
+}
+:-moz-placeholder { /* Firefox 18- */
+    color: rgba(255, 255, 255, 0.705);
 }

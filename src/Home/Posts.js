@@ -5,13 +5,14 @@ import InfiniteScroll from 'react-infinite-scroller';
 import '../styles/posts.css'
 import '../styles/common.css'
 
-const HOSTNAME = "https://swagbook-django.herokuapp.com/facebook/"
+const HOSTNAME = "http://127.0.0.1:8000/facebook/"
 const POSTS_URL = HOSTNAME + "posts/"
 const FILE_URL = HOSTNAME + "files/"
-const MEDIA_URL = "https://swagbook-django.herokuapp.com/media/"
-const DOMAIN = "https://swagbook-django.herokuapp.com/"
+const MEDIA_URL = "http://127.0.0.1:8000/media/"
+const DOMAIN = "http://127.0.0.1:8000/"
 const BASE_URL = DOMAIN + "facebook/"
 const ATTACHMENTS_URL = BASE_URL + 'files/'
+const UPLOAD_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/upload.php"
 const cookies = new Cookies();
 
 export class NewPost extends Component {
@@ -30,29 +31,60 @@ export class NewPost extends Component {
         this.inputOpenFileRef.current.click();
     }
 
+    _uploadAttachment = (id, file) => {
+        let auth = cookies.get('user_token');
+        let formData = new FormData();
+        formData.append('file',file);
+        formData.append('type',file.type);
+        formData.append('post', id);
+        fetch(ATTACHMENTS_URL ,{
+            method:'post',
+            headers:{
+                Authorization:auth
+            },
+            body:formData
+        }).then((response) => {return response.json()})
+        .then((resp_json) => {
+            if('id' in resp_json){
+                let attachments = this.state.attachments;
+                attachments = attachments.concat(resp_json);
+                this.setState({attachments:attachments});
+            }
+        }).catch(e=>console.log("Error uploading attachment",e));
+    }
+
     _onChangeFile = (event) => {
         event.stopPropagation();
         event.preventDefault();
         var file = event.target.files[0];
         console.log(file);
-        let fileType = file.type;
-        let fileName = file.name;
-        let reader = new FileReader();
-        let tempFiles = this.state.files;
-        reader.onload = (e) => {
-            let newFile = {
-                uri: e.target.result,
-                type: fileType,
-                name:fileName,
-                obj:file
-            }
-            tempFiles.push(newFile);
-            this.setState(prevState=> ({
-                files:tempFiles
-            }));
-            // this.setState({: e.target.result});
-        };
-        reader.readAsDataURL(event.target.files[0]);
+        let formBody = new FormData();
+        formBody.append('fileToUpload', file);
+        fetch(UPLOAD_URL,{
+            method:'post',
+            body:formBody
+        }).then((response)=>{return response.json()})
+        .then((resp_json) => {
+            console.log(resp_json);
+        }).catch(e => {console.log("error in uploading attachment",e)});
+        // let fileType = file.type;
+        // let fileName = file.name;
+        // let reader = new FileReader();
+        // let tempFiles = this.state.files;
+        // reader.onload = (e) => {
+        //     let newFile = {
+        //         uri: e.target.result,
+        //         type: fileType,
+        //         name:fileName,
+        //         obj:file
+        //     }
+        //     tempFiles.push(newFile);
+        //     this.setState(prevState=> ({
+        //         files:tempFiles
+        //     }));
+        //     // this.setState({: e.target.result});
+        // };
+        // reader.readAsDataURL(event.target.files[0]);
     }
 
     _saveCaption = (event) => {
@@ -68,9 +100,9 @@ export class NewPost extends Component {
             captions: caption
             }),
             headers:{
-            'Accept':'application/json',
-            'Content-Type':'application/json',
-            Authorization : auth
+                'Accept':'application/json',
+                'Content-Type':'application/json',
+                Authorization : auth
             }
         }).then(function(response){  return response.json()})
         .then((myJson) =>{
@@ -115,7 +147,7 @@ export class NewPost extends Component {
                     <div className="card-header">Compose Post</div>
                     <div className="card-body">
                         <div className="form-group">
-                            <textarea className="form-control" rows="2" id="comment" onChange={this._saveCaption}
+                            <textarea className="avi-input" rows="2" id="comment" onChange={this._saveCaption}
                                 placeholder="Write something here...">
                             </textarea>
                             {
@@ -436,7 +468,7 @@ class Post extends Component{
                     <div className="card-body">
                         {
                             editMode ? 
-                                <textarea className="form-control" rows="2" id="caption" onChange={this._saveCaption}
+                                <textarea className="avi-input" rows="2" id="caption" onChange={this._saveCaption}
                                     placeholder="Write something here..." onBlur={() => this._uploadCaption(post.id)}>
                                     {captions}
                                 </textarea>

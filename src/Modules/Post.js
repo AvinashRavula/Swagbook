@@ -1,7 +1,7 @@
 import Cookies from "universal-cookie";
 import { url } from "inspector";
 
-const DOMAIN = "https://swagbook-django.herokuapp.com/"
+const DOMAIN = "http://127.0.0.1:8000/"
 const BASE_URL = DOMAIN + "facebook/"
 const posts_url = BASE_URL + "posts/"
 const attachments_url = BASE_URL + 'files/'

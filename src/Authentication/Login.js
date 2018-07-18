@@ -3,10 +3,11 @@ import '../styles/login.css';
 import { Button, Grid, Row, Col } from 'react-bootstrap';
 import { withRouter } from "react-router-dom";
 import Cookies from 'universal-cookie';
+import { Signup } from "./Signup";
 
-const HOSTNAME = 'https://swagbook-django.herokuapp.com/facebook/'
+const HOSTNAME = 'http://127.0.0.1:8000/facebook/'
 const basic_url = HOSTNAME + 'api-basictoken-auth/';
-const auth_key = "Basic YXZpbmFzaDpyYXZ1bGFAMTIyOQ=="
+const auth_key = "Basic c2lnbnVwOmxvZ2luQDEyMjk="
 const cookies = new Cookies();
 
 class LoginHeader extends Component{
@@ -76,9 +77,9 @@ class LoginHeader extends Component{
 
     render(){
         return (
-            <div className="Header">
+            <div>
                 <Grid>
-                    <Row className="show-grid" style={{height:'100%'}}>
+                    <Row >
                         <Col md={7}>
                             <h1 className="header-name"><i>Swagbook</i>
                             </h1>
@@ -151,7 +152,6 @@ class LoginSignup extends Component {
     }
 
     handleSubmit = (e) => {
-        alert("working");
         e.preventDefault();
         console.log('signup called');
         if(this.validateForm()){
@@ -168,14 +168,14 @@ class LoginSignup extends Component {
             {
                 method:'post',
                 body:formData,
+                mode: 'no-cors',
                 headers:{
                     Authorization:auth_key
                 }
             }).then(function(response) {
                 console.log(response);
                 return response.json();
-            })
-            .then((myJson) =>{
+            }).then((myJson) =>{
                 console.log('user fetched : ',myJson);
                 if ('id' in myJson)
                 {
@@ -200,7 +200,6 @@ class LoginSignup extends Component {
                         return response.json()
                     }).then((myJson) => {
                         console.log("profile : ",myJson);
-                        alert('Profile created');
                         var base64 = require('base-64');
                         let token = 'Basic ' + base64.encode(email + ":" + password);
                         cookies.set('user_token', token, { path: '/',expires: new Date(Date.now()+2592000) });
@@ -266,84 +265,84 @@ class LoginSignup extends Component {
         }
 
         return(
-            <div style={{backgroundColor:'#e9ebee', height:'550px'}}>
-                
-                <Grid>
-                    <Row className="show-grid" style={{height:'100%'}}>
-                        <Col md={7}>
-                            <h1 style={{marginTop:'30px'}}>
-                                <i className="header-name" style={{fontSize:'20px',color:'black'}}>
-                                    Swagbook helps you connect and share with the people in your life.
-                                </i>
-                            </h1>
-                            <img src={require("../assets/connect_people.png")} alt="connect_people"
-                                    style={{marginTop:'30px'}}/>
-                        </Col>
-                        <Col md={5}>
-                            <h1 className="bold">Create an account</h1>
-                            <h4> Its free and always will be.</h4>
-                            <form method="post" onSubmit={this.handleSubmit}>
-                                <div className="form-group">
-                                <Row>
-                                    <Col md={6}>
-                                        <input type="text" className="form-control" placeholder="First Name"
-                                                onChange={this._saveFirstName}/>
-                                    </Col>
-                                    <Col md={6}>
-                                        <input type="text" className="form-control" placeholder="Sur Name"
-                                                onChange={this._saveLastName}/>
-                                    </Col>
-                                </Row>
-                                </div>
-                                <div className="form-group">
-                                    <input type="text" className="form-control" placeholder="Email Address"
-                                            onChange={this._saveEmail}/>
-                                </div>
-                                <div className="form-group">
-                                    <input type="text" className="form-control" placeholder="Phone Number"
-                                            onChange={this._savePhoneNum}/>
-                                </div>
-                                <div className="form-group">
-                                    <input type="password" className="form-control" placeholder="New Password"
-                                            onChange={this._savePassword}/>
-                                </div>
-                                <div className="form-group">
-                                    <label className="normal-heading">Birthday</label>
-                                    <table style={{ borderRight: '1px solid #e9ebee', margin:'0px'}}>
-                                        <tr>
-                                            <td style={{ borderRight: '1px solid #e9ebee'}}>
-                                                <select name="day" onChange={this._saveDate}>
-                                                    <option value="">Day</option>
-                                                    {dayOptions}
-                                                </select>
-                                            </td>
-                                            <td style={{ borderRight: '1px solid #e9ebee'}}>
-                                                <select name="month" onChange={this._saveMonth}>
-                                                    <option value="">Month</option>
-                                                    {monthOptions}
-                                                </select>
-                                            </td>
-                                            <td style={{ borderRight: '1px solid #e9ebee'}}>
-                                                <select name="year" onChange={this._saveYear}>
-                                                    <option value="">Year</option>
-                                                    {yearOptions}
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <Row>
-                                        <label><input type="radio" name="gender" value="Male" className="normal-heading"
-                                            onChange={this._saveGender}/>Male</label>
-                                        <label><input type="radio" name="gender" value="Female" className="normal-heading"
-                                            onChange={this._saveGender}/>Female</label>
-                                    </Row>
-                                    <Button bsStyle="success" type="submit" style={{width:'200px',fontSize:'20px'}}>Sign Up</Button>
-                                </div>
-                            </form>
-                        </Col>
-                    </Row>
-                </Grid>
-            </div>
+            <Signup />
+            // <div style={{height:'550px'}}>
+            //     <Grid>
+            //         <Row style={{height:'100%'}}>
+            //             <Col md={7}>
+            //                 <h1 style={{marginTop:'30px'}}>
+            //                     <i className="header-name" style={{fontSize:'20px',color:'black'}}>
+            //                         Swagbook helps you connect and share with the people in your life.
+            //                     </i>
+            //                 </h1>
+            //                 <img src={require("../assets/connect_people.png")} alt="connect_people"
+            //                         style={{marginTop:'30px'}}/>
+            //             </Col>
+            //             <Col md={5}>
+            //                 <h1 className="bold white">Create an account</h1>
+            //                 <h4> Its free and always will be.</h4>
+            //                 <form method="post" onSubmit={this.handleSubmit}>
+            //                     <div className="form-group">
+            //                     <Row>
+            //                         <Col md={6}>
+            //                             <input type="text" className="avi-input" placeholder="First Name"
+            //                                     onChange={this._saveFirstName}/>
+            //                         </Col>
+            //                         <Col md={6}>
+            //                             <input type="text" className="avi-input" placeholder="Sur Name"
+            //                                     onChange={this._saveLastName}/>
+            //                         </Col>
+            //                     </Row>
+            //                     </div>
+            //                     <div className="form-group">
+            //                         <input type="text" className="avi-input" placeholder="Email Address"
+            //                                 onChange={this._saveEmail}/>
+            //                     </div>
+            //                     <div className="form-group">
+            //                         <input type="text" className="avi-input" placeholder="Phone Number"
+            //                                 onChange={this._savePhoneNum}/>
+            //                     </div>
+            //                     <div className="form-group">
+            //                         <input type="password" className="avi-input" placeholder="New Password"
+            //                                 onChange={this._savePassword}/>
+            //                     </div>
+            //                     <div className="form-group">
+            //                         <label className="normal-heading">Birthday</label>
+            //                         <table style={{ borderRight: '1px solid #e9ebee', margin:'0px'}}>
+            //                             <tr>
+            //                                 <td style={{ borderRight: '1px solid #e9ebee'}}>
+            //                                     <select name="day" onChange={this._saveDate}>
+            //                                         <option value="">Day</option>
+            //                                         {dayOptions}
+            //                                     </select>
+            //                                 </td>
+            //                                 <td style={{ borderRight: '1px solid #e9ebee'}}>
+            //                                     <select name="month" onChange={this._saveMonth}>
+            //                                         <option value="">Month</option>
+            //                                         {monthOptions}
+            //                                     </select>
+            //                                 </td>
+            //                                 <td style={{ borderRight: '1px solid #e9ebee'}}>
+            //                                     <select name="year" onChange={this._saveYear}>
+            //                                         <option value="">Year</option>
+            //                                         {yearOptions}
+            //                                     </select>
+            //                                 </td>
+            //                             </tr>
+            //                         </table>
+            //                         <Row>
+            //                             <label><input type="radio" name="gender" value="Male" className="normal-heading"
+            //                                 onChange={this._saveGender}/>Male</label>
+            //                             <label><input type="radio" name="gender" value="Female" className="normal-heading"
+            //                                 onChange={this._saveGender}/>Female</label>
+            //                         </Row>
+            //                         <Button bsStyle="success" type="submit" style={{width:'200px',fontSize:'20px'}}>Sign Up</Button>
+            //                     </div>
+            //                 </form>
+            //             </Col>
+            //         </Row>
+            //     </Grid>
+            // </div>
         );
     }
 }

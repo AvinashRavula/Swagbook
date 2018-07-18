@@ -3,7 +3,7 @@ import '../styles/common.css';
 import {Grid, Row, Col} from 'react-bootstrap';
 import Cookies from 'universal-cookie';
 
-const HOSTNAME = "https://swagbook-django.herokuapp.com/facebook/"
+const HOSTNAME = "http://127.0.0.1:8000/facebook/"
 const people_you_may_know_url = HOSTNAME + "peopleyoumayknow/"
 const cookies = new Cookies();
 

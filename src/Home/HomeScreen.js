@@ -13,7 +13,7 @@ import '../styles/Home.css';
 import '../styles/common.css';
 
 const cookies = new Cookies();
-const DOMAIN = "https://swagbook-django.herokuapp.com/"
+const DOMAIN = "http://127.0.0.1:8000/"
 const BASE_URL = DOMAIN + "facebook/"
 const MY_PROFILE = BASE_URL + "my_profile/"
 
@@ -105,7 +105,7 @@ class HomeBody extends Component {
     render(){
         let {user} = this.state;
         return(
-            <div style={{backgroundColor:'#e9ebee'}}>
+            <div>
                 {user && <Grid>
                     <Row>
                         <Col md={2}>
@@ -113,7 +113,7 @@ class HomeBody extends Component {
                         </Col>
                         <Col md={6}>
                             <div style={{height:'100%', width:'100%',overflow:'hidden'}}>
-                                <div style={{height:'700px',overflowY:'scroll',}}>
+                                <div style={{height:'700px',overflowY:'scroll'}}>
                                     <NewPost />
                                     <AllPosts user_id={user.id} />
                                 </div>

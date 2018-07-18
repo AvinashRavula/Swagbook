@@ -49,15 +49,15 @@ a:hover {
 }
 
 .black {
-    color: black;
+    color: black !important;
+}
+
+.white {
+    color:white !important;
 }
 
 .bold {
     font-weight: bold;
-}
-
-.normal-heading {
-    font-size: 20px;
 }
 
 .label-normal {
