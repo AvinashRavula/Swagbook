@@ -66,14 +66,14 @@ class User extends Component {
         let {first_name, last_name, profilepicture } = this.props.user;
         let {display} = this.state;
         return(
-            <div style={{display: display}}>
+            <div style={{display: display, marginTop:'5px'}} className="avi-white-container-h">
                 <Grid>
                     <Row>
                         <Col md={3}>
-                        <i class="fa fa-user" aria-hidden="true"></i>
+                        
                         { profilepicture ?
                             <img src={ MEDIA_URL + profilepicture} className="small_circle" />
-                            : <img src={require("../assets/connect_people.png")} className="small_circle" />
+                            : <i class="fa fa-user fa-size" aria-hidden="true"></i>
                         }
                         </Col>
                         <Col md={9}>
@@ -82,9 +82,9 @@ class User extends Component {
                                 <div>
                                     { this.state.requested ?
                                         "Request sent"     :
-                                        <button className="btn btn-default" onClick={this._addFriend}>Add Friend</button>
+                                        <button className="avi-button green" onClick={this._addFriend}>Add Friend</button>
                                     }   
-                                    <button className="btn btn-default" onClick={this._cancelRequest}>Cancel</button>
+                                    <button className="avi-button red" onClick={this._cancelRequest}>Cancel</button>
                                 </div>
                             </div>
                         </Col>
@@ -103,11 +103,12 @@ export class PeopleYouMayKnow extends Component {
 
     render(){
         return(
-            <div className="white_card">
-                <h6 className="normal_heading">People You May Know</h6>
+            <div className="avi-black-container">
+                <h6 className="normal_heading white bold">People You May Know</h6>
                 {
-                    this.state.users.map((user) => {
-                        return <User user={user} key={user.id}/>
+                    this.state.users.map((user, index) => {
+                        if(index < 5)
+                            return <User user={user} key={user.id}/>
                     })
                 }
             </div>

@@ -13,7 +13,7 @@ const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const ATTACHMENTS_URL = BASE_URL + 'files/'
 const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
-const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+const proxyUrl = 'https://avi-cors.herokuapp.com/'
 const UPLOAD_URL = MEDIA_URL +  "upload.php";
 const cookies = new Cookies();
 
@@ -124,10 +124,10 @@ export class NewPost extends Component {
         let {files} = this.state;
         return(
             <div style={{marginBottom:'10px'}}>
-                <div className="card">
-                    <div className="card-header">Compose Post</div>
-                    <div className="card-body">
-                        <div className="form-group">
+                <div className="avi-black-container">
+                    <label className="white bold">Compose Post</label>
+                    <div className="form-group">
+                        <div className="" style={{marginTop:'5px'}}>
                             <textarea className="avi-input" rows="2" id="comment" onChange={this._saveCaption}
                                 placeholder="Write something here...">
                             </textarea>
@@ -137,17 +137,15 @@ export class NewPost extends Component {
                                 })  
                             }
                         </div>
-                    </div> 
-                    <div className="card-footer">
                         <Grid>
                             <Row>
                                 <Col md={10}>
                                     <input type="file" id="file" ref={this.inputOpenFileRef} style={{display:'none'}}
                                         onChange={this._onChangeFile}/>
-                                    <button className="btn btn-link" onClick={this._openFileDialog}>+Add Photo/Video</button>
+                                    <button className="avi-button" onClick={this._openFileDialog}>+Add Photo/Video</button>
                                 </Col>
                                 <Col md={2}>
-                                    <button className="btn btn-primary" onClick={this._submitPost}>POST</button>
+                                    <button className="avi-button" onClick={this._submitPost}>POST</button>
                                 </Col>
                             </Row>
                         </Grid>
@@ -264,24 +262,40 @@ class Post extends Component{
 
     _uploadAttachment = (id, file) => {
         let auth = cookies.get('user_token');
-        let formData = new FormData();
-        formData.append('file',file);
-        formData.append('type',file.type);
-        formData.append('post', id);
-        fetch(ATTACHMENTS_URL ,{
-            method:'post',
-            headers:{
-                Authorization:auth
-            },
-            body:formData
-        }).then((response) => {return response.json()})
-        .then((resp_json) => {
-            if('id' in resp_json){
-                let attachments = this.state.attachments;
-                attachments = attachments.concat(resp_json);
-                this.setState({attachments:attachments});
-            }
-        }).catch(e=>console.log("Error uploading attachment",e));
+        if(auth !== null){
+            let formBody = new FormData();
+            formBody.append('fileToUpload', file);
+            fetch(proxyUrl +  UPLOAD_URL,{
+                method:'post',
+                body:formBody
+            }).then((response)=>{return response.json()})
+            .then((resp_json) => {
+                console.log(resp_json);
+                if(!resp_json.error){
+                    let formData = new FormData();
+                    formData.append('file',resp_json.file);
+                    formData.append('type',file.type);
+                    formData.append('post', id);
+                    fetch(ATTACHMENTS_URL ,{
+                        method:'post',
+                        headers:{
+                            Authorization:auth
+                        },
+                        body:formData
+                    }).then((response) => {return response.json()})
+                    .then((resp_json) => {
+                        if('id' in resp_json){
+                            let attachments = this.state.attachments;
+                            attachments = attachments.concat(resp_json);
+                            this.setState({attachments:attachments});
+                        }
+                    }).catch(e=>console.log("Error uploading attachment",e));
+                }
+            }).catch(e => {
+                console.log("error in uploading attachment",e);
+                alert('Technical Error: Please refresh the page and try again');
+            });
+        }
     }
     
     _onChangeFile = (event) => {
@@ -413,8 +427,8 @@ class Post extends Component{
              showCommentSection, likes_ids} = this.state;
         return(
               <div style={{marginBottom:'10px',display:displayValue}}>
-                <div className="card">
-                    <div className="card-header">
+                <div>
+                    <div className="post-top">
                         <Row>
                             <Col md={7}>
                                 <img src={MEDIA_URL + post.profile_picture} className="extra-small-circle"/>
@@ -446,7 +460,7 @@ class Post extends Component{
                             </Col>
                         </Row>
                     </div>
-                    <div className="card-body">
+                    <div className="post-middle" style={{paddingBottom:'0px'}}>
                         {
                             editMode ? 
                                 <textarea className="avi-input" rows="2" id="caption" onChange={this._saveCaption}
@@ -469,20 +483,21 @@ class Post extends Component{
                             })
                         }
                         
-                    </div> 
+                    
                     {
-                        <div style={{marginLeft:'10px', marginRight:'10px'}}>
+                        <div style={{margin:'10px', marginBottom:'0px'}}>
                             <label className="a-small">
                                 { likes_ids ? likes_ids.split(',').length + " Likes" : 'Be the first to Like'}
                             </label>
-                            <label style={{float:'right'}} className="a-small">
+                            <label style={{float:'right', marginBottom:'0px'}} className="a-small">
                             {
                                 comments.length + " Comments"
                             }
                             </label>
                         </div>
                     }
-                    <div className="card-footer">
+                    </div> 
+                    <div className="post-bottom">
                         <Row>
                             <Col md={4}>
                                 <center>
@@ -504,23 +519,24 @@ class Post extends Component{
                                 </center>
                             </Col>
                         </Row>
-                    </div>
-                    <div>
-                        {
-                            showCommentSection ? 
-                                <div>
-                                    <center>
-                                        <input type="text" style={{width:'90%'}} placeholder="Enter comment"
-                                            onChange={this._saveCommentText}/>
-                                    </center>
-                                    <button className="btn btn-success a-small" style={{float:'right', margin:'5px'}} 
-                                        onClick={this._comment}>Add Comment</button>
-                                </div>
-                                :
-                                null
-                        }
+                        
+                            {
+                                showCommentSection ? 
+                                    <div className="post-bottom comment-section">
+                                        <center>
+                                            <input type="text" style={{width:'90%'}} placeholder="Enter comment"
+                                                onChange={this._saveCommentText} className="avi-input"/>
+                                        </center>
+                                        <button className="btn btn-success a-small" style={{float:'right', margin:'5px'}} 
+                                            onClick={this._comment}>Add Comment</button>
+                                    </div>
+                                    :
+                                    null
+                            }
+                            
                         
                     </div>
+                    
                 </div>
             </div>
         );

@@ -20,41 +20,54 @@ const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
 
 export class HomeHeader extends Component {
 
+    state = {
+        loggedIn: true
+    }
+    
+    _logout =() => {
+        cookies.remove('user_token');
+        this.setState({loggedIn:false});
+    }
+
     render(){
+        let {loggedIn} = this.state;
         return(
-            <div className="Home-Header">
+            loggedIn ? <div className="Home-Header">
                 <Grid>
                     <Row>
                         <Col md={7}  className="Row-Header">
-                            <Link to="/">
-                                <button className="btn-primary" >
-                                    Home
-                                </button>                            
-                            </Link>
-                           <SearchUsers />
+                            <Row>
+                                <Col md={4}>
+                                    <Link to="/">
+                                        <img src={require('../assets/swag.png')} style={{width:'50px',height:'100%'}}/>
+                                    </Link>
+                                </Col>  
+                                <Col md={8} style={{marginTop:'3px'}}>
+                                    <SearchUsers />
+                                </Col>
+                            </Row>
                         </Col>
                         <Col md={5}  className="Row-Header">
                             <Link to="/profile">
-                                <button className="btn-default">
+                                <button className="avi-button">
                                     Profile
                                 </button>
                             </Link>
                             &nbsp;&nbsp;&nbsp;
                             <Link to="/friends">
-                                <button className="btn-default">
-                                    Friends
-                                </button>
-                            </Link>
-                            &nbsp;&nbsp;&nbsp;
-                            <Link to="/messenger">
-                                <button className="btn-default">
+                                <button className="avi-button">
                                     Messages
                                 </button>
                             </Link>
+                            &nbsp;&nbsp;&nbsp;
+                            <button className="avi-button" onClick={this._logout}>
+                                Logout
+                            </button>
                         </Col>
                     </Row>
                 </Grid>
-            </div>
+            </div> 
+            : <Redirect to={{pathname:"/login", state: { from: this.props.location} }}/>
         );
     }
 }
@@ -64,15 +77,18 @@ class HomeLeft extends Component {
     render(){
         let {first_name, last_name, profile} = this.props.user;
         return(
-            <div>
+            <div className="white avi-black-container">
+                <center>
                 {
                     profile && profile.profilepicture ? 
-                        <img src={ MEDIA_URL + profile.profilepicture.image} className="extra-small-circle"/>
-                        : <img src={require('../assets/profile.jpg')} className="extra-small-circle"/>
+                        <img src={ MEDIA_URL + profile.profilepicture.image} className="small_circle"/>
+                        : <i class="fa fa-user fa-size" aria-hidden="true"></i>
                 }
-                {first_name + " " + last_name}<br/>
-                <button className="btn btn-link">News feed</button><br/>
-                <button className="btn btn-link">Messages</button><br/>
+                
+                &nbsp; <label style={{maxWidth:'100%'}}>{first_name + " " + last_name}</label>
+                </center>
+                <button className="avi-button" onClick={() => this.props.refresh()}>News feed</button><br/>
+                <button className="avi-button">Messages</button><br/>
             </div>
         );
     }
@@ -83,6 +99,7 @@ class HomeBody extends Component {
 
     state = {
         user:null,
+        refreshCount:1
     }
 
     _fetchProfile = () => {
@@ -102,14 +119,16 @@ class HomeBody extends Component {
         }).catch(e=>console.log(e));
     }
 
+    
     render(){
-        let {user} = this.state;
+        let {user, refreshCount} = this.state;
+
         return(
-            <div>
-                {user && <Grid>
+            <div style={{marginTop:'20px'}}>
+                {user && refreshCount && <Grid>
                     <Row>
                         <Col md={2}>
-                            <HomeLeft user={user}/>
+                            <HomeLeft user={user} refresh={this.props.refresh}/>
                         </Col>
                         <Col md={6}>
                             <div style={{height:'100%', width:'100%',overflow:'hidden'}}>
@@ -120,8 +139,9 @@ class HomeBody extends Component {
                             </div>
                         </Col>
                         <Col md={4}>
-                            <PeopleYouMayKnow />
                             <FriendRequests />
+                            <br/>
+                            <PeopleYouMayKnow />
                         </Col>
                     </Row>
                 </Grid>}
@@ -136,22 +156,27 @@ class HomeBody extends Component {
 
 class Home extends Component {
 
-
-    render(){
-        return (
-            <div>
-                <HomeHeader {...this.props}/>
-                <HomeBody {...this.props}/>
-            </div>
-        );
+    _refresh = () => {
+        // this.setState(prevState => ({
+        //    refreshCount:prevState.refreshCount + 1 
+        // }));
+        console.log("refreshing"); 
+        this.forceUpdate();
+        // location.reload();
     }
 
-    componentDidMount = () => {
+
+    render(){
         let auth = cookies.get('user_token');
-        if(auth === null)
-        {
-            <Redirect to="/login"/>
-        }
+        return (
+            auth ? 
+                <div>
+                    <HomeHeader {...this.props}/>
+                    <HomeBody {...this.props} refresh={this._refresh}/>
+                </div>
+            :
+                <Redirect to={{pathname:"/login", state: { from: this.props.location} }}/>
+        );
     }
 }
 

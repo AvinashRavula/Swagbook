@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { Grid, Row, Col } from "react-bootstrap";
 import Cookies from 'universal-cookie';
 
+import '../styles/common.css';
+
 const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const friend_requests_url = BASE_URL + 'friends/requests/'
@@ -64,11 +66,13 @@ class UserRequest extends Component {
         let {first_name, last_name, profilepicture } = this.props.user;
         let {display, accepted} = this.state;
         return(
-            <div style={{display:display}}>
+            <div style={{display:display, marginTop:'5px'}} className="avi-white-container-h">
                 <Grid>
                     <Row>
                         <Col md={3}>
-                        <img src={ profilepicture ? MEDIA_URL + profilepicture : require("../assets/connect_people.png")} className="small_circle" />
+                            { profilepicture ? 
+                                    <img src={MEDIA_URL + profilepicture } className="small_circle" />
+                                    : <i class="fa fa-user fa-size" aria-hidden="true"></i> }
                         </Col>
                         <Col md={9}>
                             <div>
@@ -76,8 +80,8 @@ class UserRequest extends Component {
                                 {
                                     accepted ? "You are now friends" :
                                     <div>
-                                        <button className="btn btn-default" onClick={this._confirmFriend}>Confirm Friend</button>
-                                        <button className="btn btn-danger" onClick={this._cancelRequest}>Cancel</button>
+                                        <button className="avi-button green" onClick={this._confirmFriend}>Confirm Friend</button>
+                                        <button className="avi-button red" onClick={this._cancelRequest}>Cancel</button>
                                     </div>
                                 }
                             </div>
@@ -97,13 +101,13 @@ export class FriendRequests extends Component {
     render(){
         let {users} = this.state;
         return(
-            <div className="white_card">
-                <h6 className="normal_heading">Friend Requests</h6>
+            <div className="avi-black-container">
+                <h6 className="normal_heading white bold">Friend Requests</h6>
                 {
                     users.length > 0 ? users.map((user) => {
                         return <UserRequest user={user} key={user.id}/>
                     })
-                    : <center><p className="a-small a-mt-40">No New Requests</p></center>
+                    : <center><p className="a-small a-mt-40 white">No New Requests</p></center>
                 }
             </div>
         );

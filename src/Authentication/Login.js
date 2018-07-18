@@ -7,8 +7,6 @@ import { Signup } from "./Signup";
 
 const HOSTNAME = 'https://swagbook-django.herokuapp.com/facebook/'
 const basic_url = HOSTNAME + 'api-basictoken-auth/';
-const auth_key = "Basic c2lnbnVwOmxvZ2luQDEyMjk="
-var proxyUrl = 'https://cors-anywhere.herokuapp.com/'
 const cookies = new Cookies();
 
 class LoginHeader extends Component{
@@ -78,50 +76,47 @@ class LoginHeader extends Component{
 
     render(){
         return (
-            <div>
-                <Grid>
-                    <Row >
-                        <Col md={7}>
-                            <h1 className="header-name"><i>Swagbook</i>
-                            </h1>
-                        </Col>
-                        <Col md={5}>
-                            <table>
-                                {/* <tbody> */}
-                                    <tr>
-                                        <td>
-                                            <label className="label-normal">Email or Phone</label>
-                                        </td>
-                                        <td>
-                                            <label className="label-normal">Password</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="username" name="username" id="username" tabindex="1" className="text-field"
-                                                onChange={(text) => this._saveUsername(text)}/>
-                                        </td>
-                                        <td>
-                                            <input type="password" name="pass" id="pass" tabindex="2" className="text-field"
-                                                onChange={(text) => this._savePassword(text)}/>
-                                        </td>
-                                        <td>
-                                            <button className="btn-default" onClick={() => this._login(this.state)}>Login</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td>
-                                            <a href="#">Forgotten account?</a>
-                                        </td>
-                                    </tr>
-                                {/* </tbody> */}
-                            </table>
-                        </Col>
-                    </Row>
-                </Grid>
-                    {/* <Button bsStyle="primary">Primary</Button> */}
-            </div>
+            <Row >
+                <Col md={7}>
+                    <h1 className="header-name"><i>Swagbook</i>
+                    </h1>
+                </Col>
+                <Col md={5}>
+                    <div >
+                    <table>
+                        {/* <tbody> */}
+                            <tr>
+                                <td>
+                                    <label className="label-normal">Email or Phone</label>
+                                </td>
+                                <td>
+                                    <label className="label-normal">Password</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="username" name="username" id="username" tabindex="1" className="avi-input"
+                                        onChange={(text) => this._saveUsername(text)}/>
+                                </td>
+                                <td>
+                                    <input type="password" name="pass" id="pass" tabindex="2" className="avi-input"
+                                        onChange={(text) => this._savePassword(text)}/>
+                                </td>
+                                <td>
+                                    <button className="btn-default" onClick={() => this._login(this.state)}>Login</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <a href="#">Forgotten account?</a>
+                                </td>
+                            </tr>
+                        {/* </tbody> */}
+                    </table>
+                    </div>
+                </Col>
+            </Row>
         );
     }
 }
@@ -129,221 +124,21 @@ class LoginHeader extends Component{
 
 
 class LoginSignup extends Component {
-
-
-    state = {
-        first_name:'',
-        last_name:'',
-        email:'',
-        phone_num:'',
-        password:'',
-        date:'',
-        month:'',
-        year:'',
-        gender:'',
-    }
-
-    validateForm = () => {
-        let {first_name, last_name, email, password, phone_num, date, year, month, gender} = this.state;
-        if (first_name.length > 3 && last_name.length > 3 && email.length > 3 && 
-            phone_num.length == 10 && password.length >= 8 && date != '' && month != ''
-            && year != '' && gender != '')
-            return true;
-        return false;
-    }
-
-    handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('signup called');
-        if(this.validateForm()){
-            let {first_name, last_name, email, password, phone_num, date, year, month, gender} = this.state;
-            let user_id = '0';
-            console.log("validateForm return true");
-            var formData = new FormData();
-            formData.append('username',email);
-            formData.append('first_name', first_name);
-            formData.append('last_name',last_name);
-            formData.append('email', email);
-            formData.append('password', password);
-            fetch(HOSTNAME + 'users',
-            {
-                method:'post',
-                body:formData,
-                mode: 'no-cors',
-                headers:{
-                    Authorization:auth_key
-                }
-            }).then(function(response) {
-                console.log(response);
-                return response.json();
-            }).then((myJson) =>{
-                console.log('user fetched : ',myJson);
-                if ('id' in myJson)
-                {
-                    user_id = myJson.id;
-                    var profileData = new FormData();
-                    profileData.append('nick_name', '');
-                    profileData.append('dob', year + '-' + month + '-' + date);
-                    profileData.append('phonenum', phone_num);
-                    profileData.append('gender', gender);
-                    profileData.append('born_place', '');
-                    profileData.append('languages_known', '');
-                    profileData.append('relationship_status', '');
-                    profileData.append('user', user_id);
-                    fetch(HOSTNAME + 'profiles',
-                    {
-                        method:'POST',
-                        headers:{
-                            'Authorization':auth_key
-                        },
-                        body:profileData,
-                    }).then(function(response){
-                        return response.json()
-                    }).then((myJson) => {
-                        console.log("profile : ",myJson);
-                        var base64 = require('base-64');
-                        let token = 'Basic ' + base64.encode(email + ":" + password);
-                        cookies.set('user_token', token, { path: '/',expires: new Date(Date.now()+2592000) });
-                        this.props.history.push('/');
-                    }).catch(e => console.log("Error creating profile"));
-                }
-            }).catch(e => console.log("Error creating User"));
-        }
-        console.log('signup exited');
-    }
-
-    _saveFirstName = (event) => {
-        this.setState({first_name:event.target.value})
-    }
-    _saveLastName = (event) => {
-        this.setState({last_name:event.target.value})
-    }
-    _saveEmail = (event) => {
-        this.setState({email:event.target.value})
-    }
-    _savePhoneNum = (event) => {
-        this.setState({phone_num:event.target.value})
-    }
-    _savePassword = (event) => {
-        this.setState({password:event.target.value})
-    }
-    _saveDate = (event) => {
-        this.setState({date:event.target.value})
-    }
-    _saveMonth = (event) => {
-        this.setState({month:event.target.value})
-    }
-    _saveYear = (event) => {
-        this.setState({year:event.target.value})
-    }
-    _saveGender = (event) => {
-        console.log(event.target.value);
-        this.setState({gender:event.target.value})
-    }
-
+    
     render(){
-        let days = 31, months = 12, startYear = 1905, currentYear= new Date().getFullYear();
-        let currentMonth = new Date().getMonth();
-        let currentDate = new Date().getDate();
-        let dayOptions = [], monthOptions = [], yearOptions=[];
-        for (let i = 1; i <= days; i++) {
-            if( i === currentDate)
-                dayOptions.push(<option value={"" + (i)} selected>{i}</option>)
-            else
-                dayOptions.push(<option value={"" + (i)}>{i}</option>);
-        }
-        for (let i = 1; i <= months; i++) {
-            if( i === currentMonth)
-                monthOptions.push(<option value={"" + (i)} selected>{i}</option>)
-            else
-                monthOptions.push(<option value={"" + (i)}>{i}</option>);
-        }
-        for (let i = startYear; i < currentYear; i++) {
-            if( i === currentYear - 25)
-                yearOptions.push(<option value={"" + (i)} selected>{i}</option>)
-            else
-                yearOptions.push(<option value={"" + (i)}>{i}</option>);
-        }
-
         return(
-            <Signup {...this.props}/>
-            // <div style={{height:'550px'}}>
-            //     <Grid>
-            //         <Row style={{height:'100%'}}>
-            //             <Col md={7}>
-            //                 <h1 style={{marginTop:'30px'}}>
-            //                     <i className="header-name" style={{fontSize:'20px',color:'black'}}>
-            //                         Swagbook helps you connect and share with the people in your life.
-            //                     </i>
-            //                 </h1>
-            //                 <img src={require("../assets/connect_people.png")} alt="connect_people"
-            //                         style={{marginTop:'30px'}}/>
-            //             </Col>
-            //             <Col md={5}>
-            //                 <h1 className="bold white">Create an account</h1>
-            //                 <h4> Its free and always will be.</h4>
-            //                 <form method="post" onSubmit={this.handleSubmit}>
-            //                     <div className="form-group">
-            //                     <Row>
-            //                         <Col md={6}>
-            //                             <input type="text" className="avi-input" placeholder="First Name"
-            //                                     onChange={this._saveFirstName}/>
-            //                         </Col>
-            //                         <Col md={6}>
-            //                             <input type="text" className="avi-input" placeholder="Sur Name"
-            //                                     onChange={this._saveLastName}/>
-            //                         </Col>
-            //                     </Row>
-            //                     </div>
-            //                     <div className="form-group">
-            //                         <input type="text" className="avi-input" placeholder="Email Address"
-            //                                 onChange={this._saveEmail}/>
-            //                     </div>
-            //                     <div className="form-group">
-            //                         <input type="text" className="avi-input" placeholder="Phone Number"
-            //                                 onChange={this._savePhoneNum}/>
-            //                     </div>
-            //                     <div className="form-group">
-            //                         <input type="password" className="avi-input" placeholder="New Password"
-            //                                 onChange={this._savePassword}/>
-            //                     </div>
-            //                     <div className="form-group">
-            //                         <label className="normal-heading">Birthday</label>
-            //                         <table style={{ borderRight: '1px solid #e9ebee', margin:'0px'}}>
-            //                             <tr>
-            //                                 <td style={{ borderRight: '1px solid #e9ebee'}}>
-            //                                     <select name="day" onChange={this._saveDate}>
-            //                                         <option value="">Day</option>
-            //                                         {dayOptions}
-            //                                     </select>
-            //                                 </td>
-            //                                 <td style={{ borderRight: '1px solid #e9ebee'}}>
-            //                                     <select name="month" onChange={this._saveMonth}>
-            //                                         <option value="">Month</option>
-            //                                         {monthOptions}
-            //                                     </select>
-            //                                 </td>
-            //                                 <td style={{ borderRight: '1px solid #e9ebee'}}>
-            //                                     <select name="year" onChange={this._saveYear}>
-            //                                         <option value="">Year</option>
-            //                                         {yearOptions}
-            //                                     </select>
-            //                                 </td>
-            //                             </tr>
-            //                         </table>
-            //                         <Row>
-            //                             <label><input type="radio" name="gender" value="Male" className="normal-heading"
-            //                                 onChange={this._saveGender}/>Male</label>
-            //                             <label><input type="radio" name="gender" value="Female" className="normal-heading"
-            //                                 onChange={this._saveGender}/>Female</label>
-            //                         </Row>
-            //                         <Button bsStyle="success" type="submit" style={{width:'200px',fontSize:'20px'}}>Sign Up</Button>
-            //                     </div>
-            //                 </form>
-            //             </Col>
-            //         </Row>
-            //     </Grid>
-            // </div>
+            <div style={{height:'100%'}}>
+                <br/>
+                <Row>
+                    <Col md={7}>
+                    </Col>
+                    <Col md={5}>
+                        <center>
+                            <Signup {...this.props}/>
+                        </center>
+                    </Col>
+                </Row>
+            </div>
         );
     }
 }
@@ -352,11 +147,19 @@ class Login extends Component{
 
     render(){
         return(
-            <div>
+            <Grid>
                 <LoginHeader {...this.props}/>
                 <LoginSignup  {...this.props}/>
-            </div>         
+            </Grid>   
         );
+    }
+
+    componentDidMount = () => {
+        console.log('mounted');
+        let auth = cookies.get('user_token');
+        if(auth != null){
+            this.props.history.push('/');
+        }
     }
 }
 

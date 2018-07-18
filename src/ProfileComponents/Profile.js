@@ -12,7 +12,7 @@ const BASE_URL = DOMAIN + "facebook/"
 const MY_PROFILE = BASE_URL + "my_profile/"
 
 const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
-const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+const proxyUrl = 'https://avi-cors.herokuapp.com/'
 const UPLOAD_URL = MEDIA_URL +  "upload.php";
 
 export class Profile extends Component {
@@ -126,7 +126,7 @@ export class Profile extends Component {
         return(
             <div style={{marginBottom:'20px'}}>
                 <HomeHeader {...this.props}/>
-                <div className="background">
+                <div>
                     {user && <div className="a-container">
                         <input type="file" id="file" ref={this.inputOpenFileCoverRef} style={{display:'none'}}
                                         onChange={(event) => this._onChangeFile(event, 'cover')}/>

@@ -131,21 +131,21 @@ export class Signup extends Component {
         let currentDate = new Date().getDate();
         let dayOptions = [], monthOptions = [], yearOptions=[];
         for (let i = 1; i <= days; i++) {
-            if( i === currentDate)
-                dayOptions.push(<option value={"" + (i)} selected>{i}</option>)
-            else
+            // if( i === currentDate)
+            //     dayOptions.push(<option value={"" + (i)} selected>{i}</option>)
+            // else
                 dayOptions.push(<option value={"" + (i)}>{i}</option>);
         }
         for (let i = 1; i <= months; i++) {
-            if( i === currentMonth)
-                monthOptions.push(<option value={"" + (i)} selected>{i}</option>)
-            else
+            // if( i === currentMonth)
+            //     monthOptions.push(<option value={"" + (i)} selected>{i}</option>)
+            // else
                 monthOptions.push(<option value={"" + (i)}>{i}</option>);
         }
         for (let i = startYear; i < currentYear; i++) {
-            if( i === currentYear - 25)
-                yearOptions.push(<option value={"" + (i)} selected>{i}</option>)
-            else
+            // if( i === currentYear - 25)
+            //     yearOptions.push(<option value={"" + (i)} selected>{i}</option>)
+            // else
                 yearOptions.push(<option value={"" + (i)}>{i}</option>);
         }
 
@@ -182,19 +182,19 @@ export class Signup extends Component {
                         <label className="white normal-heading bold">Birthday</label>
                         <table style={{ borderRight: '1px solid #e9ebee', margin:'0px'}}>
                             <tr>
-                                <td style={{ borderRight: '1px solid #e9ebee'}}>
+                                <td style={{ borderRight: '1px solid transparent'}}>
                                     <select name="day" onChange={this._saveDate}>
                                         <option value="">Day</option>
                                         {dayOptions}
                                     </select>
                                 </td>
-                                <td style={{ borderRight: '1px solid #e9ebee'}}>
+                                <td style={{ borderRight: '1px solid transparent'}}>
                                     <select name="month" onChange={this._saveMonth}>
                                         <option value="">Month</option>
                                         {monthOptions}
                                     </select>
                                 </td>
-                                <td style={{ borderRight: '1px solid #e9ebee'}}>
+                                <td style={{ borderRight: '1px solid transparent'}}>
                                     <select name="year" onChange={this._saveYear}>
                                         <option value="">Year</option>
                                         {yearOptions}
@@ -202,12 +202,13 @@ export class Signup extends Component {
                                 </td>
                             </tr>
                         </table>
-                        <Row>
-                            <label><input type="radio" name="gender" value="Male" className="normal-heading"
-                                onChange={this._saveGender}/>Male</label>
-                            <label><input type="radio" name="gender" value="Female" className="normal-heading"
-                                onChange={this._saveGender}/>Female</label>
-                        </Row>
+                        <label className="white normal-heading bold">Gender</label><br/>
+                        <label className="white"><input type="radio" name="gender" value="Male"
+                            onChange={this._saveGender}/>Male</label>
+                        &nbsp;&nbsp;&nbsp;
+                        <label className="white"><input type="radio" name="gender" value="Female" 
+                            onChange={this._saveGender}/>Female</label>
+                        <br/>
                         <Button bsStyle="success" type="submit" style={{width:'200px',fontSize:'20px'}}>Sign Up</Button>
                     </div>
                 </form>

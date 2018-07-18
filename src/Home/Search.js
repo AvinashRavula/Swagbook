@@ -41,7 +41,9 @@ export class SearchUsers extends Component {
         let {users} = this.state;
         return(
             <div className="dropdown">
-                <input type="text"  data-toggle="dropdown" onChange={(event) => this._searchUser(event.target.value)}/>
+                <input type="text"  data-toggle="dropdown" 
+                    onChange={(event) => this._searchUser(event.target.value)}
+                    placeholder="Search..." className="avi-input"/>
                 <div className="dropdown-menu">
                     {
                         users.map((user)=>{
