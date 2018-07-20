@@ -4,7 +4,7 @@ import Cookies from 'universal-cookie';
 
 import '../styles/common.css';
 
-const DOMAIN = "http://127.0.0.1:8000/"
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const friend_requests_url = BASE_URL + 'friends/requests/'
 const users_v2_url = BASE_URL + "v2/users/"
@@ -64,15 +64,14 @@ class UserRequest extends Component {
 
     render(){
         let {first_name, last_name, profile } = this.props.request.user;
-        let {profilepicture} = profile;
         let {display, accepted} = this.state;
         return(
             <div style={{display:display, marginTop:'5px'}} className="avi-white-container-h">
                 <Grid>
                     <Row>
                         <Col md={3}>
-                            { profilepicture ? 
-                                    <img src={MEDIA_URL + profilepicture } className="small_circle" />
+                            { profile && profile.profilepicture ? 
+                                    <img src={MEDIA_URL + profile.profilepicture } className="small_circle" />
                                     : <i class="fa fa-user fa-size" aria-hidden="true"></i> }
                         </Col>
                         <Col md={9}>

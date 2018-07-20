@@ -1,15 +1,18 @@
 import React, { Component } from "react";
-import '../styles/common.css';
-import '../styles/profile.css';
+import {Grid, Row, Col} from 'react-bootstrap';
 import { HomeHeader } from "../Home/HomeScreen";
 import { About } from "./About";
 import { Friends } from "./Friends";
 import Cookies from 'universal-cookie';
 
+import '../styles/common.css';
+import '../styles/profile.css';
+
 const cookies = new Cookies();
-const DOMAIN = "http://127.0.0.1:8000/"
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const MY_PROFILE = BASE_URL + "my_profile/"
+const USER_PROFILE_URL = BASE_URL + "v2/users/"
 
 const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
 const proxyUrl = 'https://avi-cors.herokuapp.com/'
@@ -24,7 +27,9 @@ export class Profile extends Component {
     }
     state={
         user:null,
-        showTab:'about'
+        showTab:'about',
+        profileImageLoading:false,
+        coverImageLoading:false,
     }
 
     _openCoverFileDialog = (e) => {
@@ -42,6 +47,7 @@ export class Profile extends Component {
         let {coverpicture, profilepicture} = this.state.user.profile;
         console.log("upload as", upload_as);
         if(upload_as == 'cover'){
+            this.setState({coverImageLoading:true})
             url = BASE_URL + 'cps/'
             if(coverpicture)
             {
@@ -50,6 +56,7 @@ export class Profile extends Component {
             }
         }
         else if(upload_as == 'profile'){
+            this.setState({profileImageLoading:true})
             url = BASE_URL + 'dps/'
             if(profilepicture)
             {
@@ -81,7 +88,18 @@ export class Profile extends Component {
                 .then((resp_json) => {
                     let temp_user = this.state.user;
                     temp_user.profile[upload_as + 'picture'] = resp_json;
-                    this.setState({user:temp_user});
+                    if(upload_as == 'cover'){
+                        this.setState({
+                            user:temp_user,
+                            coverImageLoading:false
+                        });
+                    }
+                    else{
+                        this.setState({
+                            user:temp_user,
+                            profileImageLoading:false
+                        });
+                    }
                 }).catch(e=>console.log("Error uploading attachment",e));
             }
         }).catch(e => {
@@ -103,67 +121,87 @@ export class Profile extends Component {
         this.setState({showTab:tab_name});
     }
     
-    _fetchProfile = () => {
+    _fetchProfile = (user_id) => {
         let auth = cookies.get('user_token');
-        fetch(MY_PROFILE, {
+        if(auth === null)
+            return;
+        let url = ""
+        if(user_id == 'my')
+            url = MY_PROFILE
+        else
+            url = USER_PROFILE_URL + user_id + '/'
+        fetch(url, {
             method:'get',
             headers:{
                 Authorization:auth
             }
         }).then(function(response) {return response.json()})
         .then((resp_json) => {
-            console.log(resp_json[0])
-            if('id' in resp_json[0]){
+            if(user_id == 'my')
+                resp_json = resp_json[0]
+            console.log(resp_json)
+            if('id' in resp_json){
                 this.setState({
-                    user:resp_json[0]
+                    user:resp_json
                 })
             }
         }).catch(e=>console.log(e));
     }
 
     render(){
-        let {user, showTab} = this.state;
+        let {user, showTab, profileImageLoading, coverImageLoading} = this.state;
+        let {id} = this.props.match.params;
         return(
             <div style={{marginBottom:'20px'}}>
                 <HomeHeader {...this.props}/>
-                <div>
+                <Grid>
                     {user && 
-                        <div className="a-container">
-                            <div className="avi-container">
+                        <div>
+                            <div className="cover-container">
                                 <input type="file" id="file" ref={this.inputOpenFileCoverRef} style={{display:'none'}}
                                                 onChange={(event) => this._onChangeFile(event, 'cover')}/>
-                                <img src={user.profile.coverpicture ? MEDIA_URL + user.profile.coverpicture.image : require("../assets/cover.jpg")}
-                                        className="cover-pic"/>
+                                {
+                                    coverImageLoading ? 
+                                        <img src={require('../assets/loading.gif') } className="cover-pic" />
+                                        :
+                                        <img src={user.profile.coverpicture ? MEDIA_URL + user.profile.coverpicture.image : require("../assets/cover.jpg")}
+                                             className="cover-pic"/>
+                                }
                                 <button className="over-btn"  onClick={this._openCoverFileDialog}>edit</button>
-                            </div>
-                            <div className="row">
-                                <div style={{width:'50%'}}>
+                                <div className="profilepic-container">
                                     <input type="file" id="file" ref={this.inputOpenFileProfileRef} style={{display:'none'}}
                                                 onChange={(event) => this._onChangeFile(event,'profile')}/>
-                                    <img src={user.profile.profilepicture ? MEDIA_URL + user.profile.profilepicture.image : require("../assets/profile.jpg")} width="128px" height="128px" 
-                                        className="a-profile"/>
-                                    <label className="a-profile-name a-mt-40">
+                                    {
+                                        profileImageLoading ? 
+                                        <img src={require('../assets/loading.gif') } className="profile-pic" 
+                                            />
+                                        :
+                                        <img src={user.profile.profilepicture ? MEDIA_URL + user.profile.profilepicture.image : require("../assets/profile.jpg")}
+                                             className="profile-pic"/>
+                                    }
+                                    <button className="over-btn" onClick={this._openProfileFileDialog}>edit</button>
+                                </div>
+                                <label className="profile-username">
                                         {user.first_name + " " + user.last_name}
-                                    </label>
-                                </div>
-                                <div style={{width:'50%'}}>
-                                    <button className="a-mt-40" onClick={() => this.show('about')}>About</button>
-                                    &nbsp;&nbsp;&nbsp;  
-                                    <button className="a-mt-40" onClick={() => this.show('friends')}>Friends</button>
-                                </div>
+                                        <label className="profile-nickname">
+                                            {user.profile && user.profile.nick_name != '' ? "(" + user.profile.nick_name + ")" : null}
+                                        </label>
+                                </label>
                             </div>
-                            <button className="bt-n btn-link btn-profile-edit" onClick={this._openProfileFileDialog}>edit</button>
-
-                            { showTab == 'about' ? <About user={user}/> : null }
+                            <br/><br/>
+                            { showTab == 'about' ? id == 'my' ?     
+                                        <About user={user} mode="edit"/> : <About user={user} />
+                                        : null }
                             { showTab == 'friends' ? <Friends /> : null }
                         </div>
                     }
-                </div>
+                </Grid>
             </div>
         );
     }
 
     componentDidMount = () =>{
-        this._fetchProfile();
+        console.log(this.props.match.params.id);
+        this._fetchProfile(this.props.match.params.id);
     }
 }

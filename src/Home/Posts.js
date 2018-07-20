@@ -5,11 +5,11 @@ import InfiniteScroll from 'react-infinite-scroller';
 import '../styles/posts.css'
 import '../styles/common.css'
 
-const HOSTNAME = "http://127.0.0.1:8000/facebook/"
+const HOSTNAME = "https://swagbook-django.herokuapp.com/facebook/"
 const POSTS_URL = HOSTNAME + "posts/"
 const FILE_URL = HOSTNAME + "files/"
 
-const DOMAIN = "http://127.0.0.1:8000/"
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const ATTACHMENTS_URL = BASE_URL + 'files/'
 const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
@@ -27,6 +27,7 @@ export class NewPost extends Component {
     state= {
         files:[],
         caption:'',
+        uploading:false
     }
 
     _openFileDialog = (e) => {
@@ -36,6 +37,7 @@ export class NewPost extends Component {
     _uploadAttachment = (file) => {
         let auth = cookies.get('user_token');
         if(auth !== null){
+            this.setState({uploading:true});
             let formBody = new FormData();
             formBody.append('fileToUpload', file);
             fetch(proxyUrl +  UPLOAD_URL,{
@@ -51,7 +53,10 @@ export class NewPost extends Component {
                         type:file.type
                     }
                     temp.push(newFile);
-                    this.setState({files:temp});
+                    this.setState({
+                        files:temp,
+                        uploading:false
+                    });
                 }
             }).catch(e => {
                 console.log("error in uploading attachment",e);
@@ -106,12 +111,16 @@ export class NewPost extends Component {
                         return response.json()
                     }).then((resp) => {
                         console.log("resp ",resp);
-                        alert("posted file");        
+                        //alert("posted file");        
                     }).catch(e => console.log(e));
-                })
+                }, this.setState(prevState => ({
+                    caption :'',
+                    files:[],
+                }), this.props.refresh()))
+                
             // }
             // else{
-                alert("Posted");
+                //alert("Posted");
             // }
             }
             else{
@@ -121,7 +130,7 @@ export class NewPost extends Component {
     }
 
     render(){
-        let {files} = this.state;
+        let {files,caption, uploading} = this.state;
         return(
             <div style={{marginBottom:'10px'}}>
                 <div className="avi-black-container">
@@ -129,13 +138,22 @@ export class NewPost extends Component {
                     <div className="form-group">
                         <div className="" style={{marginTop:'5px'}}>
                             <textarea className="avi-input" rows="2" id="comment" onChange={this._saveCaption}
-                                placeholder="Write something here...">
+                                placeholder="Write something here..." value={caption}>
                             </textarea>
+                            <Row style={{paddingLeft:'20px'}}>
                             {
                                 files && files.map((file, index) => {
-                                    return <img src={MEDIA_URL + file.uri} width="56px" height="56px" style={{margin:'5px'}} key={index}/>
+                                    return file.type.includes('image') ? 
+                                        <img src={MEDIA_URL + file.uri} width="56px" height="56px" style={{margin:'5px'}} key={index}/>
+                                        :
+                                        <video width="56px" controls width={'56px'}height={'56px'}>
+                                            <source src={MEDIA_URL + file.uri} type={file.type}/>
+                                            Your browser does not support HTML5 video.
+                                        </video>
                                 })  
                             }
+                            { uploading ? <img src={require('../assets/loading.gif')} width="56px" height="56px" style={{margin:'5px'}} key={-123}/> : null }
+                            </Row>
                         </div>
                         <Grid>
                             <Row>
@@ -253,7 +271,7 @@ class Post extends Component{
         })
         .then((response) => { 
             if (response.ok){
-                alert("Deleted");
+                //alert("Deleted");
                 this.setState({displayValue:'none'});
             }
         })
@@ -619,7 +637,20 @@ export class AllPosts extends Component {
         );
     }
 
+    getSnapshotBeforeUpdate(prevProps, prevState){
+        if(this.props.count != prevProps.count){
+            this._refreshPosts();
+            // this.firebaseListener();
+        }
+        return null;
+    }
+
     componentDidMount = () => {
+        console.log("did mount");
         this._refreshPosts();
+    }
+
+    componentDidUpdate =() => {
+        console.log("did update");
     }
 }

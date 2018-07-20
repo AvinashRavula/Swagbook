@@ -6,7 +6,7 @@ import '../styles/login.css';
 import '../styles/signup.css';
 import '../styles/common.css';
 
-const HOSTNAME = 'http://127.0.0.1:8000/facebook/'
+const HOSTNAME = 'https://swagbook-django.herokuapp.com/facebook/'
 const basic_url = HOSTNAME + 'api-basictoken-auth/';
 const auth_key = "Basic YXZpbmFzaDpyYXZ1bGFAMTIyOQ=="
 const cookies = new Cookies();

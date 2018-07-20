@@ -1,6 +1,8 @@
 .a-profile {
     margin-left: 100px;
     margin-top: -50px;
+    max-width: 150px;
+    max-height: 150px;
 }
 
 .a-profile-name {
@@ -20,4 +22,59 @@
 .btn-profile-edit {
     margin-top: -40px;
     margin-left: 168px
+}
+
+
+.profilepic-container {
+    position: absolute;
+    width: 30%;
+    /* height: 90%; */
+    max-width: 150px;
+    max-height: 150px;
+    border: 2px solid white;
+    left:5%;
+    top:65%;
+}
+
+.profilepic-container img{
+    width: 30%;
+    /* height: 80%; */
+}
+
+
+
+.cover-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: 300px;
+}
+
+.cover-container img {
+    width: 100%;
+    max-height: 300px;
+}
+
+.cover-container:hover .over-btn{
+    display: inline;
+}
+
+.profile-username {
+    position: absolute;
+    left:35%;
+    top:85%;
+    font-family: inherit;
+    font-weight: bold;
+    color: white;
+    font-size: 20px;
+    text-shadow: 0.1em 0.1em #333
+}
+
+.profile-nickname {
+    font-size:15px;
+}
+
+.profile-pic {
+    width:128px;
+    height: 128px;
 }

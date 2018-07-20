@@ -17,7 +17,7 @@ class App extends Component {
             <Login {...props} />}/>
           <Route exact path="/" render={(props)=> 
             <Home {...props}/>}/>
-          <Route exact path="/profile" render={(props)=> 
+          <Route exact path="/profile/:id" render={(props)=> 
             <Profile {...props}/>}/>
           <Route exact path="/messenger" render={(props)=> 
             <Messenger  {...this.props}/>}/>

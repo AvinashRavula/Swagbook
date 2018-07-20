@@ -13,7 +13,7 @@ import '../styles/Home.css';
 import '../styles/common.css';
 
 const cookies = new Cookies();
-const DOMAIN = "http://127.0.0.1:8000/"
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const MY_PROFILE = BASE_URL + "my_profile/"
 const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
@@ -48,7 +48,7 @@ export class HomeHeader extends Component {
                             </Row>
                         </Col>
                         <Col md={5}  className="Row-Header">
-                            <Link to="/profile">
+                            <Link to="/profile/my">
                                 <button className="avi-button">
                                     Profile
                                 </button>
@@ -119,22 +119,27 @@ class HomeBody extends Component {
         }).catch(e=>console.log(e));
     }
 
+    refresh = () => {
+        this.setState(prevState => ({
+            refreshCount: prevState.refreshCount + 1
+        }))
+    }
+
     
     render(){
         let {user, refreshCount} = this.state;
-
         return(
             <div style={{marginTop:'20px'}}>
                 {user && refreshCount && <Grid>
                     <Row>
                         <Col md={2}>
-                            <HomeLeft user={user} refresh={this.props.refresh}/>
+                            <HomeLeft user={user} refresh={this.refresh} count={refreshCount}/>
                         </Col>
                         <Col md={6}>
                             <div style={{height:'100%', width:'100%',overflow:'hidden'}}>
                                 <div style={{height:'700px',overflowY:'scroll'}}>
-                                    <NewPost />
-                                    <AllPosts user_id={user.id} />
+                                    <NewPost refresh={this.refresh} count={refreshCount}/>
+                                    <AllPosts user_id={user.id} count={refreshCount}/>
                                 </div>
                             </div>
                         </Col>

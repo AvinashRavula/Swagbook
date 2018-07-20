@@ -3,7 +3,7 @@ import '../styles/common.css';
 import {Grid, Row, Col} from 'react-bootstrap';
 import Cookies from 'universal-cookie';
 
-const HOSTNAME = "http://127.0.0.1:8000/facebook/"
+const HOSTNAME = "https://swagbook-django.herokuapp.com/facebook/"
 const people_you_may_know_url = HOSTNAME + "peopleyoumayknow/"
 const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
 const cookies = new Cookies();
@@ -103,13 +103,15 @@ export class PeopleYouMayKnow extends Component {
 
     render(){
         return(
-            <div className="avi-black-container" style={{maxHeight:'500px', overflow:'auto'}}>
+            <div className="avi-black-container" >
                 <h6 className="normal_heading white bold">People You May Know</h6>
-                {
-                    this.state.users.map((user, index) => {
-                        return <User user={user} key={user.id}/>
-                    })
-                }
+                <div style={{maxHeight:'500px', overflow:'auto'}}>
+                    {
+                        this.state.users.map((user, index) => {
+                            return <User user={user} key={user.id}/>
+                        })
+                    }
+                </div>
             </div>
         );
     }

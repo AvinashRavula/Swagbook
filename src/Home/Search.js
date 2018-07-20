@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import Cookies from 'universal-cookie';
+import { Redirect } from "react-router-dom";
  
-const DOMAIN = "http://127.0.0.1:8000/"
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const user_search_url = BASE_URL + "search_users/?query="
 const cookies = new Cookies();
@@ -9,6 +10,7 @@ export class SearchUsers extends Component {
 
     state={
         users:[],
+        redirectId:null,
     }
 
     _searchUser = (text) => {
@@ -34,13 +36,16 @@ export class SearchUsers extends Component {
     }
 
     _openProfile = (id) =>{
-
+        this.setState({
+            redirectId:id
+        })
     }
 
     render(){
-        let {users} = this.state;
+        let {users, redirectId} = this.state;
         return(
-            <div className="dropdown">
+            redirectId ? <Redirect to={"/profile/" + redirectId}/>
+             : <div className="dropdown">
                 <input type="text"  data-toggle="dropdown" 
                     onChange={(event) => this._searchUser(event.target.value)}
                     placeholder="Search..." className="avi-input"/>

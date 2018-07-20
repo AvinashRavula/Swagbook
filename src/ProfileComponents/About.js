@@ -2,7 +2,7 @@ import React,{ Component } from "react";
 import { Row, Col , Grid} from "react-bootstrap";
 import Cookies from "universal-cookie";
 
-const DOMAIN = "http://127.0.0.1:8000/"
+const DOMAIN = "https://swagbook-django.herokuapp.com/"
 const BASE_URL = DOMAIN + "facebook/"
 const profile_url = BASE_URL + "v2/profiles/"
 const cookies = new Cookies();
@@ -15,10 +15,18 @@ const InputLabelField = (props) => {
                     <label for={props.for ? props.for : 'input'}>{props.label}</label>
                 </Col>
                 <Col md={8}>
-                    <input type={props.type} width="100%" 
+                    {props.mode == 'edit' ? 
+                        <input type={props.type} width="100%" className="avi-input"
                         onBlur={props.onBlur ? props.onBlur : null} 
                         onChange={props.onChange ? props.onChange : null }
-                        value={props.value ? props.value : ''}/>
+                        value={props.value ? props.value : ''}
+                        />
+                        :
+                        <input type={props.type} width="100%" className="avi-input"
+                        onBlur={props.onBlur ? props.onBlur : null} 
+                        onChange={props.onChange ? props.onChange : null }
+                        value={props.value ? props.value : ''} readOnly/>
+                    }
                 </Col>
             </Row>
     )
@@ -73,7 +81,7 @@ export class About extends Component {
         .then((resp_json) => {
             console.log(resp_json);
             if('id' in resp_json){
-                alert('updated');
+                //alert('updated');
             }
         })
     }
@@ -81,20 +89,25 @@ export class About extends Component {
     render() {
         let {nick_name, dob, born_place, languages_known} = this.state
         return (
-            <center>
-                <div style={{width:'50%'}}>
+            <div className="avi-white-container" style={{maxWidth:'500px'}}>
+                <label className="black bold">About</label>
+                <div className="avi-black-container">
                     <InputLabelField label="Nick Name" type="text" value={nick_name}
-                        onChange={this._saveNickName}/>
+                        onChange={this._saveNickName} {...this.props}/>
                     <InputLabelField label="Date Of Birth" type="text" value={dob}
-                        onChange={this._saveDob}/>
+                        onChange={this._saveDob} {...this.props}/>
                     <InputLabelField label="Born Place" type="text" value={born_place}
-                        onChange={this._saveBornPlace}/>
+                        onChange={this._saveBornPlace} {...this.props}/>
                     <InputLabelField label="Languages Known" type="text" value={languages_known}
-                        onChange={this._saveLanguagesKnown}/>
+                        onChange={this._saveLanguagesKnown} {...this.props}/>
+                    <br/>
+                    {this.props.mode == 'edit' ? 
                     <button className="btn btn-success a-small" style={{float:'right'}}
                         onClick={this._saveAbout}>Save changes</button>
+                    : null }
+                    <br/>
                 </div>
-            </center>
+            </div>
         );
     }
 

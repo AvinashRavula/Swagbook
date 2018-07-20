@@ -10,7 +10,7 @@ import { firebase_config } from "../Config";
 import '../styles/common.css'
 import '../styles/posts.css'
 
-const BASE_URL = "http://127.0.0.1:8000/facebook/"
+const BASE_URL = "https://swagbook-django.herokuapp.com/facebook/"
 const FRIENDS_URL = BASE_URL + "my_friends/"
 const PROFILE_URL = BASE_URL + "my_profile/"
 const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
@@ -60,10 +60,11 @@ class AllFriends extends Component {
                 <div className="avi-black-container"> 
                     <label className="white bold">Friends </label>
                     {
-                        friends.map((friend) => {
+                        friends.length > 0 ? friends.map((friend) => {
                             return <Friend item={friend} user_id={user_id} key={friend.id} 
                                         setSelectedFriend={setSelectedFriend}/>
                         })   
+                        : <div><label className="white">You dont have any friends</label></div>
                     }
                 </div>
             : <Redirect to={{pathname:"/login", state: { from: this.props.location} }}/>
