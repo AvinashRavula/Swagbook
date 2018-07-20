@@ -139,7 +139,11 @@ class ChatBox extends Component {
     constructor(){
         super()
         console.log('constructor')
-        this.app = firebase.initializeApp(firebase_config)
+        try{
+            this.app = firebase.initializeApp(firebase_config)
+        }catch(err){
+            
+        }
         this.state = {
             message:'',
             chat:[],
