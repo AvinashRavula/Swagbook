@@ -7,7 +7,7 @@ const BASE_URL = DOMAIN + "facebook/"
 const profile_url = BASE_URL + "v2/profiles/"
 const cookies = new Cookies();
 
-const InputLabelField = (props) => {
+export const InputLabelField = (props) => {
 
     return(
             <Row>

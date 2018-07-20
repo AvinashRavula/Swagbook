@@ -24,10 +24,58 @@ export class Signup extends Component {
         gender:'',
     }
 
+    validateEmail = () =>
+    {
+        console.log("validateEmail function called");
+        fetch(`${HOSTNAME}duplicate_email/?email=${this.state.email}`,
+        {
+            method:'GET',
+            headers:{
+                Authorization: auth_key
+            }
+        }).then(function(response){
+            return response.json()
+        }).then((myJson) =>
+        {
+            console.log("EMail json : ", myJson);
+            if( myJson.email == 'invalid'){
+                this.setState({validEmail:false});
+                alert("Email already exists.")
+            }
+            else{
+                this.setState({validEmail:true});
+            }
+        }).catch(e => {console.log(e)});
+    }
+
+    validatePhoneNum =() =>
+    {
+        console.log("validatePhonenum function called");
+        fetch(`${HOSTNAME}duplicate_phonenum/?phonenum=${this.state.phone_num}`,
+        {
+            method:'GET',
+            headers:{
+                Authorization:auth_key
+            }
+        }).then(function(response){
+            return response.json()
+        }).then((myJson) =>
+        {
+            console.log("Phonenum json : ", myJson);
+            if( myJson.phonenum == 'invalid'){
+                this.setState({validPhonenum:false});
+                alert("Phonenum already exists.")
+            }
+            else{
+                this.setState({validPhonenum:true});
+            }
+        }).catch(e => {console.log(e)});
+    }
+
     validateForm = () => {
-        let {first_name, last_name, email, password, phone_num, date, year, month, gender} = this.state;
-        if (first_name.length > 3 && last_name.length > 3 && email.length > 3 && 
-            phone_num.length == 10 && password.length >= 8 && date != '' && month != ''
+        let {first_name, last_name, validEmail, password, validPhonenum, date, year, month, gender} = this.state;
+        if (first_name.length > 3 && last_name.length > 3 && validEmail && 
+            validPhonenum && password.length >= 8 && date != '' && month != ''
             && year != '' && gender != '')
             return true;
         return false;
@@ -89,6 +137,9 @@ export class Signup extends Component {
                     }).catch(e => console.log("Error creating profile"));
                 }
             }).catch(e => console.log("Error creating User"));
+        }
+        else{
+            alert('Please fill all the details');
         }
         console.log('signup exited');
     }
@@ -165,11 +216,11 @@ export class Signup extends Component {
                     </div>
                     <div className="form-group">
                         <input type="text" className="avi-input" placeholder="Email Address"
-                                onChange={this._saveEmail}/>
+                                onChange={this._saveEmail} onBlur={this.validateEmail}/>
                     </div>
                     <div className="form-group">
                         <input type="text" className="avi-input" placeholder="Phone Number"
-                                onChange={this._savePhoneNum}/>
+                                onChange={this._savePhoneNum} onBlur={this.validatePhoneNum}/>
                     </div>
                     <div className="form-group">
                         <input type="password" className="avi-input" placeholder="New Password"
