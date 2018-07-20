@@ -4,7 +4,7 @@ import Cookies from 'universal-cookie';
 
 import '../styles/common.css';
 
-const DOMAIN = "https://swagbook-django.herokuapp.com/"
+const DOMAIN = "http://127.0.0.1:8000/"
 const BASE_URL = DOMAIN + "facebook/"
 const friend_requests_url = BASE_URL + 'friends/requests/'
 const users_v2_url = BASE_URL + "v2/users/"
@@ -19,9 +19,9 @@ class UserRequest extends Component {
     }
 
     _confirmFriend = () =>{
-        let {user} = this.props;
+        let {id} = this.props.request;
         let auth = cookies.get('user_token');
-        fetch(BASE_URL + "friends/" + user.request_id + "/",{
+        fetch(BASE_URL + "friends/" + id + "/",{
             method:'put',
             body:JSON.stringify({
                 status:1
@@ -44,9 +44,9 @@ class UserRequest extends Component {
     }
     
     _cancelRequest =() =>{
-        let {user} = this.props;
+        let {id} = this.props.request;
         let auth = cookies.get('user_token');
-        let url = BASE_URL + "friends/" + user.request_id+"/";
+        let url = BASE_URL + "friends/" + id+"/";
         console.log(url);
         fetch(url,{
           method:'delete',
@@ -63,7 +63,8 @@ class UserRequest extends Component {
 
 
     render(){
-        let {first_name, last_name, profilepicture } = this.props.user;
+        let {first_name, last_name, profile } = this.props.request.user;
+        let {profilepicture} = profile;
         let {display, accepted} = this.state;
         return(
             <div style={{display:display, marginTop:'5px'}} className="avi-white-container-h">
@@ -95,17 +96,17 @@ class UserRequest extends Component {
 
 export class FriendRequests extends Component {
     state = {
-        users : [],
+        requests : [],
     }
 
     render(){
-        let {users} = this.state;
+        let {requests} = this.state;
         return(
             <div className="avi-black-container">
                 <h6 className="normal_heading white bold">Friend Requests</h6>
                 {
-                    users.length > 0 ? users.map((user) => {
-                        return <UserRequest user={user} key={user.id}/>
+                    requests.length > 0 ? requests.map((request) => {
+                        return <UserRequest request={request} key={request.id}/>
                     })
                     : <center><p className="a-small a-mt-40 white">No New Requests</p></center>
                 }
@@ -122,47 +123,10 @@ export class FriendRequests extends Component {
         }
         }).then(function(response) {return response.json()})
         .then(response_json =>{
-            console.log(response_json);
-            response_json.map((request, index) => {
-            let user_url = users_v2_url + request.user + "/";
-            fetch(user_url,{
-                method:'get',
-                headers:{
-                    Authorization:auth
-                }
-            }).then(function(user_response) {return user_response.json()})
-            .then(user =>{
-                let tempUsers = this.state.users;
-                user['request_id'] = request.id;
-                tempUsers.push(user);
-                this.setState({users:tempUsers});
-                if(user.profile){
-                    let profile_url = BASE_URL + "v2/profiles/" + user.profile;
-                    // console.log(profile_url);
-                    fetch(profile_url,{
-                        method:'get',
-                        headers:{
-                        Authorization:auth
-                        }
-                    }).then(function(response1) {return response1.json()})
-                    .then(response1_json =>{
-                    //   console.log(response1_json);
-                        if(response1_json.profilepicture){
-                            // console.log("profilepicture found");
-                            user['profilepicture'] = response1_json.profilepicture.image;
-                            console.log("user ",user);
-                            let tempUsers = this.state.users;
-                            tempUsers[index] = user;
-                            this.setState({users:tempUsers});
-                        }
-                        // this.setState({users:user});
-                    }).catch(e => console.log("Error fetching the profile", e));
-                }
-            }) 
-                
-        });
-        //   console.log("updated ",this.state.users);
-
+            console.log(response_json); 
+            this.setState({
+                requests:response_json
+            })
         }).catch(e => console.log("Error fetching the User", e));
     }
 }

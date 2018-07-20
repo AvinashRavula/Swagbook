@@ -5,11 +5,11 @@ import InfiniteScroll from 'react-infinite-scroller';
 import '../styles/posts.css'
 import '../styles/common.css'
 
-const HOSTNAME = "https://swagbook-django.herokuapp.com/facebook/"
+const HOSTNAME = "http://127.0.0.1:8000/facebook/"
 const POSTS_URL = HOSTNAME + "posts/"
 const FILE_URL = HOSTNAME + "files/"
 
-const DOMAIN = "https://swagbook-django.herokuapp.com/"
+const DOMAIN = "http://127.0.0.1:8000/"
 const BASE_URL = DOMAIN + "facebook/"
 const ATTACHMENTS_URL = BASE_URL + 'files/'
 const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"

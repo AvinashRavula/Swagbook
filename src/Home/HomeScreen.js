@@ -13,7 +13,7 @@ import '../styles/Home.css';
 import '../styles/common.css';
 
 const cookies = new Cookies();
-const DOMAIN = "https://swagbook-django.herokuapp.com/"
+const DOMAIN = "http://127.0.0.1:8000/"
 const BASE_URL = DOMAIN + "facebook/"
 const MY_PROFILE = BASE_URL + "my_profile/"
 const MEDIA_URL = "http://smartupkarimnagar.com/Newdirectory/Avinash/Swagbook/"
@@ -54,7 +54,7 @@ export class HomeHeader extends Component {
                                 </button>
                             </Link>
                             &nbsp;&nbsp;&nbsp;
-                            <Link to="/friends">
+                            <Link to="/messenger">
                                 <button className="avi-button">
                                     Messages
                                 </button>
@@ -88,7 +88,7 @@ class HomeLeft extends Component {
                 &nbsp; <label style={{maxWidth:'100%'}}>{first_name + " " + last_name}</label>
                 </center>
                 <button className="avi-button" onClick={() => this.props.refresh()}>News feed</button><br/>
-                <button className="avi-button">Messages</button><br/>
+                <Link to="/messenger"><button className="avi-button">Messages</button></Link><br/>
             </div>
         );
     }

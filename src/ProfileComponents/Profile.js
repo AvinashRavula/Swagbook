@@ -7,7 +7,7 @@ import { Friends } from "./Friends";
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const DOMAIN = "https://swagbook-django.herokuapp.com/"
+const DOMAIN = "http://127.0.0.1:8000/"
 const BASE_URL = DOMAIN + "facebook/"
 const MY_PROFILE = BASE_URL + "my_profile/"
 
@@ -127,32 +127,37 @@ export class Profile extends Component {
             <div style={{marginBottom:'20px'}}>
                 <HomeHeader {...this.props}/>
                 <div>
-                    {user && <div className="a-container">
-                        <input type="file" id="file" ref={this.inputOpenFileCoverRef} style={{display:'none'}}
-                                        onChange={(event) => this._onChangeFile(event, 'cover')}/>
-                        <img src={user.profile.coverpicture ? MEDIA_URL + user.profile.coverpicture.image : require("../assets/cover.jpg")} width="100%" height="300px"/>
-                        <button className="btn btn-link a-mt--40" onClick={this._openCoverFileDialog}>edit</button>
-                        <div className="row">
-                            <div style={{width:'50%'}}>
-                                <input type="file" id="file" ref={this.inputOpenFileProfileRef} style={{display:'none'}}
-                                            onChange={(event) => this._onChangeFile(event,'profile')}/>
-                                <img src={user.profile.profilepicture ? MEDIA_URL + user.profile.profilepicture.image : require("../assets/profile.jpg")} width="128px" height="128px" 
-                                    className="a-profile"/>
-                                <label className="a-profile-name a-mt-40">
-                                    {user.first_name + " " + user.last_name}
-                                </label>
+                    {user && 
+                        <div className="a-container">
+                            <div className="avi-container">
+                                <input type="file" id="file" ref={this.inputOpenFileCoverRef} style={{display:'none'}}
+                                                onChange={(event) => this._onChangeFile(event, 'cover')}/>
+                                <img src={user.profile.coverpicture ? MEDIA_URL + user.profile.coverpicture.image : require("../assets/cover.jpg")}
+                                        className="cover-pic"/>
+                                <button className="over-btn"  onClick={this._openCoverFileDialog}>edit</button>
                             </div>
-                            <div style={{width:'50%'}}>
-                                <button className="a-mt-40" onClick={() => this.show('about')}>About</button>
-                                &nbsp;&nbsp;&nbsp;  
-                                <button className="a-mt-40" onClick={() => this.show('friends')}>Friends</button>
+                            <div className="row">
+                                <div style={{width:'50%'}}>
+                                    <input type="file" id="file" ref={this.inputOpenFileProfileRef} style={{display:'none'}}
+                                                onChange={(event) => this._onChangeFile(event,'profile')}/>
+                                    <img src={user.profile.profilepicture ? MEDIA_URL + user.profile.profilepicture.image : require("../assets/profile.jpg")} width="128px" height="128px" 
+                                        className="a-profile"/>
+                                    <label className="a-profile-name a-mt-40">
+                                        {user.first_name + " " + user.last_name}
+                                    </label>
+                                </div>
+                                <div style={{width:'50%'}}>
+                                    <button className="a-mt-40" onClick={() => this.show('about')}>About</button>
+                                    &nbsp;&nbsp;&nbsp;  
+                                    <button className="a-mt-40" onClick={() => this.show('friends')}>Friends</button>
+                                </div>
                             </div>
-                        </div>
-                        <button className="bt-n btn-link btn-profile-edit" onClick={this._openProfileFileDialog}>edit</button>
+                            <button className="bt-n btn-link btn-profile-edit" onClick={this._openProfileFileDialog}>edit</button>
 
-                        { showTab == 'about' ? <About user={user}/> : null }
-                        { showTab == 'friends' ? <Friends /> : null }
-                    </div>}
+                            { showTab == 'about' ? <About user={user}/> : null }
+                            { showTab == 'friends' ? <Friends /> : null }
+                        </div>
+                    }
                 </div>
             </div>
         );

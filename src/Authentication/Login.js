@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import Cookies from 'universal-cookie';
 import { Signup } from "./Signup";
 
-const HOSTNAME = 'https://swagbook-django.herokuapp.com/facebook/'
+const HOSTNAME = 'http://127.0.0.1:8000/facebook/'
 const basic_url = HOSTNAME + 'api-basictoken-auth/';
 const cookies = new Cookies();
 
@@ -84,7 +84,7 @@ class LoginHeader extends Component{
                 <Col md={5}>
                     <div >
                     <table>
-                        {/* <tbody> */}
+                        <tbody>
                             <tr>
                                 <td>
                                     <label className="label-normal">Email or Phone</label>
@@ -95,11 +95,11 @@ class LoginHeader extends Component{
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="username" name="username" id="username" tabindex="1" className="avi-input"
+                                    <input type="username" name="username" id="username" tabIndex="1" className="avi-input"
                                         onChange={(text) => this._saveUsername(text)}/>
                                 </td>
                                 <td>
-                                    <input type="password" name="pass" id="pass" tabindex="2" className="avi-input"
+                                    <input type="password" name="pass" id="pass" tabIndex="2" className="avi-input"
                                         onChange={(text) => this._savePassword(text)}/>
                                 </td>
                                 <td>
@@ -112,7 +112,7 @@ class LoginHeader extends Component{
                                     <a href="#">Forgotten account?</a>
                                 </td>
                             </tr>
-                        {/* </tbody> */}
+                        </tbody>
                     </table>
                     </div>
                 </Col>

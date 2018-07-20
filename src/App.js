@@ -6,11 +6,11 @@ import  Login  from "./Authentication/Login";
 import Home from "./Home/HomeScreen";
 import { Profile } from "./ProfileComponents/Profile";
 import { Friends } from "./Messenger/Friends";
+import Messenger from "./Messenger/Messenger";
 
 class App extends Component {
   render() {
     return (
-
       <Router>
         <Switch>
           <Route exact path="/login" render={(props) => 
@@ -19,8 +19,8 @@ class App extends Component {
             <Home {...props}/>}/>
           <Route exact path="/profile" render={(props)=> 
             <Profile {...props}/>}/>
-          <Route exact path="/friends" render={(props)=> 
-            <Friends {...props}/>}/>
+          <Route exact path="/messenger" render={(props)=> 
+            <Messenger  {...this.props}/>}/>
         </Switch>
       </Router>
     );

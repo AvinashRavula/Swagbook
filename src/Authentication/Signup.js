@@ -6,12 +6,11 @@ import '../styles/login.css';
 import '../styles/signup.css';
 import '../styles/common.css';
 
-const HOSTNAME = 'https://swagbook-django.herokuapp.com/facebook/'
+const HOSTNAME = 'http://127.0.0.1:8000/facebook/'
 const basic_url = HOSTNAME + 'api-basictoken-auth/';
 const auth_key = "Basic YXZpbmFzaDpyYXZ1bGFAMTIyOQ=="
 const cookies = new Cookies();
 export class Signup extends Component {
-
 
     state = {
         first_name:'',
@@ -35,7 +34,6 @@ export class Signup extends Component {
     }
 
     handleSubmit = (e) => {
-        alert("working");
         e.preventDefault();
         console.log('signup called');
         if(this.validateForm()){
@@ -84,7 +82,6 @@ export class Signup extends Component {
                         return response.json()
                     }).then((myJson) => {
                         console.log("profile : ",myJson);
-                        alert('Profile created');
                         var base64 = require('base-64');
                         let token = 'Basic ' + base64.encode(email + ":" + password);
                         cookies.set('user_token', token, { path: '/',expires: new Date(Date.now()+2592000) });
@@ -134,19 +131,19 @@ export class Signup extends Component {
             // if( i === currentDate)
             //     dayOptions.push(<option value={"" + (i)} selected>{i}</option>)
             // else
-                dayOptions.push(<option value={"" + (i)}>{i}</option>);
+                dayOptions.push(<option value={"" + (i)} key={i}>{i}</option>);
         }
         for (let i = 1; i <= months; i++) {
             // if( i === currentMonth)
             //     monthOptions.push(<option value={"" + (i)} selected>{i}</option>)
             // else
-                monthOptions.push(<option value={"" + (i)}>{i}</option>);
+                monthOptions.push(<option value={"" + (i)} key={i}>{i}</option>);
         }
         for (let i = startYear; i < currentYear; i++) {
             // if( i === currentYear - 25)
             //     yearOptions.push(<option value={"" + (i)} selected>{i}</option>)
             // else
-                yearOptions.push(<option value={"" + (i)}>{i}</option>);
+                yearOptions.push(<option value={"" + (i)} key={i}>{i}</option>);
         }
 
         return(
@@ -181,26 +178,28 @@ export class Signup extends Component {
                     <div className="form-group">
                         <label className="white normal-heading bold">Birthday</label>
                         <table style={{ borderRight: '1px solid #e9ebee', margin:'0px'}}>
-                            <tr>
-                                <td style={{ borderRight: '1px solid transparent'}}>
-                                    <select name="day" onChange={this._saveDate}>
-                                        <option value="">Day</option>
-                                        {dayOptions}
-                                    </select>
-                                </td>
-                                <td style={{ borderRight: '1px solid transparent'}}>
-                                    <select name="month" onChange={this._saveMonth}>
-                                        <option value="">Month</option>
-                                        {monthOptions}
-                                    </select>
-                                </td>
-                                <td style={{ borderRight: '1px solid transparent'}}>
-                                    <select name="year" onChange={this._saveYear}>
-                                        <option value="">Year</option>
-                                        {yearOptions}
-                                    </select>
-                                </td>
-                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td style={{ borderRight: '1px solid transparent'}}>
+                                        <select name="day" onChange={this._saveDate}>
+                                            <option value="">Day</option>
+                                            {dayOptions}
+                                        </select>
+                                    </td>
+                                    <td style={{ borderRight: '1px solid transparent'}}>
+                                        <select name="month" onChange={this._saveMonth}>
+                                            <option value="">Month</option>
+                                            {monthOptions}
+                                        </select>
+                                    </td>
+                                    <td style={{ borderRight: '1px solid transparent'}}>
+                                        <select name="year" onChange={this._saveYear}>
+                                            <option value="">Year</option>
+                                            {yearOptions}
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                         <label className="white normal-heading bold">Gender</label><br/>
                         <label className="white"><input type="radio" name="gender" value="Male"
