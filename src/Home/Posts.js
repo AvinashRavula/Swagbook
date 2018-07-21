@@ -449,7 +449,7 @@ class Post extends Component{
                     <div className="post-top">
                         <Row>
                             <Col md={7}>
-                                { post.profilepicture ?   
+                                { post.profile_picture ?   
                                     <img src={MEDIA_URL + post.profile_picture} className="extra-small-circle"/>
                                 : <i class="fa fa-user fa-small-size white" aria-hidden="true"></i> }
                                 &nbsp;&nbsp;&nbsp;

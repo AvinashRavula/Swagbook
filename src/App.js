@@ -7,12 +7,17 @@ import Home from "./Home/HomeScreen";
 import { Profile } from "./ProfileComponents/Profile";
 import { Friends } from "./Messenger/Friends";
 import Messenger from "./Messenger/Messenger";
+import firebase from "firebase/app";
+import 'firebase/database';
+import { firebase_config } from "./Config";
+
 
 class App extends Component {
 
   constructor(){
     super()
-    // this.app = firebase.initializeApp(firebase_config)
+    this.app = firebase.initializeApp(firebase_config)
+    console.log("app constructor");
   }
 
   render() {

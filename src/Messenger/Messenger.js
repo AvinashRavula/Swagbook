@@ -136,10 +136,15 @@ const ChatElement = (props) => {
 
 class ChatBox extends Component {
 
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         console.log('constructor')
-        this.app = firebase.initializeApp(firebase_config)
+        this.app = props.app;
+        console.log("firebase apps length",firebase.apps.length);
+        if(firebase.apps.length == 0)
+            this.app = firebase.initializeApp(firebase_config);
+        else
+            this.app = firebase.apps[0];
         this.state = {
             message:'',
             chat:[],
