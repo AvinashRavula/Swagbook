@@ -78,8 +78,13 @@ export class NewPost extends Component {
     }
     
     _submitPost = () => {
-        let {caption} = this.state;
+        let {caption, files} = this.state;
         let auth = cookies.get('user_token');
+        if(caption == '' && files.length < 1)
+        {
+            alert('Please add something to post');
+            return;
+        }
         fetch(POSTS_URL, {
             method:'post',
             body:JSON.stringify({
@@ -95,7 +100,7 @@ export class NewPost extends Component {
             console.log('post response in new post ',myJson)
             if ('id' in myJson){
             // if(this.state.files.length > 0){
-                this.state.files.map((file) =>{
+                files.map((file) =>{
                     console.log("file is ", file);
                     let fileBody = new FormData();
                     fileBody.append('file', file.uri);
