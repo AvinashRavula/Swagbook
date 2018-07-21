@@ -9,6 +9,12 @@ import { Friends } from "./Messenger/Friends";
 import Messenger from "./Messenger/Messenger";
 
 class App extends Component {
+
+  constructor(){
+    super()
+    this.app = firebase.initializeApp(firebase_config)
+  }
+
   render() {
     return (
       <Router>
@@ -20,7 +26,7 @@ class App extends Component {
           <Route exact path="/profile/:id" render={(props)=> 
             <Profile {...props}/>}/>
           <Route exact path="/messenger" render={(props)=> 
-            <Messenger  {...this.props}/>}/>
+            <Messenger  {...this.props} app={this.app}/>}/>
         </Switch>
       </Router>
     );

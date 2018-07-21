@@ -449,7 +449,9 @@ class Post extends Component{
                     <div className="post-top">
                         <Row>
                             <Col md={7}>
-                                <img src={MEDIA_URL + post.profile_picture} className="extra-small-circle"/>
+                                { post.profilepicture ?   
+                                    <img src={MEDIA_URL + post.profile_picture} className="extra-small-circle"/>
+                                : <i class="fa fa-user fa-small-size white" aria-hidden="true"></i> }
                                 &nbsp;&nbsp;&nbsp;
                                 {post.first_name + " "+ post.last_name}
                                 {editMode ? "(editing)" : ""}
