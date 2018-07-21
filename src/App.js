@@ -12,7 +12,7 @@ class App extends Component {
 
   constructor(){
     super()
-    this.app = firebase.initializeApp(firebase_config)
+    // this.app = firebase.initializeApp(firebase_config)
   }
 
   render() {
