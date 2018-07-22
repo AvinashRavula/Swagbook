@@ -6,7 +6,7 @@ import '../styles/posts.css'
 import '../styles/common.css'
 
 const HOSTNAME = "https://swagbook-django.herokuapp.com/facebook/"
-const POSTS_URL = HOSTNAME + "posts/"
+const POSTS_URL = HOSTNAME + "newsfeed/"
 const FILE_URL = HOSTNAME + "files/"
 
 const DOMAIN = "https://swagbook-django.herokuapp.com/"
