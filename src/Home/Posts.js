@@ -6,7 +6,8 @@ import '../styles/posts.css'
 import '../styles/common.css'
 
 const HOSTNAME = "https://swagbook-django.herokuapp.com/facebook/"
-const POSTS_URL = HOSTNAME + "newsfeed/"
+const POSTS_URL = HOSTNAME + "posts/"
+const NEWSFEED_URL = HOSTNAME + "newsfeed/"
 const FILE_URL = HOSTNAME + "files/"
 
 const DOMAIN = "https://swagbook-django.herokuapp.com/"
@@ -612,7 +613,7 @@ export class AllPosts extends Component {
         this.setState((prevState) => ({
             posts: []
         }));
-        this._fetchPosts(POSTS_URL);
+        this._fetchPosts(NEWSFEED_URL);
     }
 
     render(){
