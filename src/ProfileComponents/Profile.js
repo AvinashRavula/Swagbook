@@ -167,7 +167,7 @@ export class Profile extends Component {
                                         <img src={user.profile.coverpicture ? MEDIA_URL + user.profile.coverpicture.image : require("../assets/cover.jpg")}
                                              className="cover-pic"/>
                                 }
-                                <button className="over-btn"  onClick={this._openCoverFileDialog}>edit</button>
+                                { id == 'my' ? <button className="over-btn"  onClick={this._openCoverFileDialog}>edit</button> : null }
                                 <div className="profilepic-container">
                                     <input type="file" id="file" ref={this.inputOpenFileProfileRef} style={{display:'none'}}
                                                 onChange={(event) => this._onChangeFile(event,'profile')}/>
@@ -179,7 +179,7 @@ export class Profile extends Component {
                                         <img src={user.profile.profilepicture ? MEDIA_URL + user.profile.profilepicture.image : require("../assets/profile.jpg")}
                                              className="profile-pic"/>
                                     }
-                                    <button className="over-btn" onClick={this._openProfileFileDialog}>edit</button>
+                                    { id == 'my' ? <button className="over-btn" onClick={this._openProfileFileDialog}>edit</button> : null}
                                 </div>
                                 <label className="profile-username">
                                         {user.first_name + " " + user.last_name}
